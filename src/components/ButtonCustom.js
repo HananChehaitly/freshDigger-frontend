@@ -1,29 +1,44 @@
-import React, { Component } from "react"
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React from "react";
+import {StyleSheet, Text, View, TextInput, TouchableOpacity} from "react-native";
+import { colors, shadows } from '../constants/palette';
 
-const buttonCustom  = props => {
-    const content =(
-        <View style={[styles.button, {backgroundColor: props.color}]}>
-            <Text style ={styles.text}>
-                {props.text}
-            </Text>
-        </View>
-    )
-    return <TouchableOpacity onPress={props.onPress}>{content}</TouchableOpacity>
+export default function MyButton(props) {
+
+    return(
+       
+            <TouchableOpacity  style={styles.button}  onPress={props.onPressFunction}>
+                <View>
+                    <Text  style={styles.buttonText}>
+                        {props.text}
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        
+    );
+
 }
 
 
 const styles = StyleSheet.create({
-     button:{
-         padding: 10,
-         width: 130,
-         borderRadius: 20,
-         alignItems: 'center'
-     },
-     text: {
-         color: 'white',
-         fontSize: 15
-     }
-});
+    buttonText:{
+        fontSize: 16,
+        fontWeight: '500',
+        color: colors.white,
+    },
 
-export default buttonCustom;
+    button:{
+        //flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 7,
+        paddingVertical: 8,
+        backgroundColor: colors.primary,
+        elevation: shadows.md.y,
+        shadowColor: shadows.md.color,
+        shadowOpacity: shadows.md.opacity,
+        shadowOffset: { width: shadows.md.x, height: shadows.md.y },
+        paddingHorizontal: 30,
+        height: 48,
+        marginTop: 5,
+    }
+});
