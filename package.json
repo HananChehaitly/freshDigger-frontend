@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-firebase/app": "^12.9.3",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
@@ -23,10 +24,12 @@
     "react-native-chart-kit": "^6.11.0",
     "react-native-code-input": "^1.0.6",
     "react-native-maps": "^0.28.0",
+    "react-native-modals": "^0.22.3",
     "react-native-paper": "^4.9.2",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "^3.8.0",
     "react-native-smooth-pincode-input": "^1.0.9",
+    "react-native-svg": "^9.13.3",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "0.17.1"
   },

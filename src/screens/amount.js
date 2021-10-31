@@ -16,14 +16,11 @@ export default function MainProject({route, navigation}) {
       "amount": amount
     },
     {headers:{
-      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NDY0MDM5LCJleHAiOjE2MzU0Njc2MzksIm5iZiI6MTYzNTQ2NDAzOSwianRpIjoiQUxPaEZGd1h2V3lvbkI5YyIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.6JJDP4mJkzGqJV9fOwTKxXsvjX3J2IsdSxDFAZ_9VOc` 
+      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NjEyNzMwLCJleHAiOjE2MzU2MTYzMzAsIm5iZiI6MTYzNTYxMjczMCwianRpIjoiRGo2cmZSd2R6Y3NReEphaCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.B9AJfm2LZLHsLQALvboAAZD7CDvO4DIHIsioLXU8eww` 
     }}
     ); 
     
   }
-
-  
-
    return (
   
   <TouchableWithoutFeedback onPress= {() => Keyboard.dismiss()}>
@@ -46,8 +43,6 @@ export default function MainProject({route, navigation}) {
 
   </TouchableWithoutFeedback>  
   
-  
-
    );
  }
 

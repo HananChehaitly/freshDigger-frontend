@@ -6,23 +6,12 @@ import MyButton from '../components/ButtonCustom';
 import { colors, shadows } from '../constants/palette';
 import { LineChart } from 'react-native-chart-kit'; 
 import { Dimensions } from "react-native";
+
 const screenWidth = Dimensions.get("window").width;
 
 export default function RateScreen({navigation}){
     const[averages, setData] = useState(null);
     const[days, setDays] = useState(null);
-
-    
-    const data = {
-        datasets: [
-          {
-            data: [20, 45, 28, 80, 99, 43],
-            color: (opacity = 1) => `rgba(0, 100, 0, ${opacity})`, // optional
-            strokeWidth: 2 // optional
-          }
-        ],
-        legend: ["Daily Average Rate"] // optional
-      };
       const chartConfig = {
         backgroundGradientFrom: "#1E2923",
         backgroundGradientFromOpacity: 0,
@@ -37,13 +26,13 @@ export default function RateScreen({navigation}){
     
     const getRate =  async() => { 
         const resp =  await axios.get(`${BASE_API_URL}/api/scrap`, { headers:{
-            'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NDcyNDA2LCJleHAiOjE2MzU0NzYwMDYsIm5iZiI6MTYzNTQ3MjQwNiwianRpIjoiQWZqUHljNFZZTGRUNU14ciIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.r-fPUw2lapWWtP-Hz6R783lFE-_amzz9EmnVCIoM5fo`
+            'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NjEyNzMwLCJleHAiOjE2MzU2MTYzMzAsIm5iZiI6MTYzNTYxMjczMCwianRpIjoiRGo2cmZSd2R6Y3NReEphaCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.B9AJfm2LZLHsLQALvboAAZD7CDvO4DIHIsioLXU8eww`
   
         }} 
         );
 
         const response =  await axios.get(`${BASE_API_URL}/api/draw-chart`, { headers:{
-            'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NDcyNDA2LCJleHAiOjE2MzU0NzYwMDYsIm5iZiI6MTYzNTQ3MjQwNiwianRpIjoiQWZqUHljNFZZTGRUNU14ciIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.r-fPUw2lapWWtP-Hz6R783lFE-_amzz9EmnVCIoM5fo`
+            'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NjEyNzMwLCJleHAiOjE2MzU2MTYzMzAsIm5iZiI6MTYzNTYxMjczMCwianRpIjoiRGo2cmZSd2R6Y3NReEphaCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.B9AJfm2LZLHsLQALvboAAZD7CDvO4DIHIsioLXU8eww`
   
         }}  
         );
@@ -72,12 +61,14 @@ export default function RateScreen({navigation}){
                 </View> 
      }  
 
-    <View style={{marginTop:20}}>
-   {days && <LineChart
-        data={{labels: days, 
+    {/* <View style={{marginTop:20}}>
+      
+   {days && averages && <LineChart
+        data={{labels: days,
         datasets:[
             { 
-                data: averages
+              data: averages   
+
             }
         ]
     }
@@ -87,7 +78,7 @@ export default function RateScreen({navigation}){
         chartConfig={chartConfig}
         />
    }
-    </View>
+    </View> */}
 
     </View>
     );

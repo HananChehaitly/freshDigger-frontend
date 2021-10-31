@@ -7,20 +7,20 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import loginScreen from './src/screens/login'
 import signupScreen from './src/screens/register'
 import HomeScreen from './src/screens/map'
-//import ChatsScreen from './src/screens/chats';
-//import ConversationScreen from './src/screens/conversation';
 import AmountScreen  from './src/screens/amount';
 import ProfileScreen from './src/screens/profile';
 import NotificationScreen from './src/screens/notifications';
 import RateScreen from './src/screens/rate';
 import { colors } from './src/constants/palette';
 import Design from 'react-native-vector-icons/AntDesign';
+import Dollar from 'react-native-vector-icons/FontAwesome';
+
 const HomeStack = createNativeStackNavigator();
 
 function HomeStackScreen() {
   return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+    <HomeStack.Navigator screenOptions={{ headerShown: false }}>
+      <HomeStack.Screen name="Map" component={HomeScreen} />
       <HomeStack.Screen name="Rate" component={RateScreen} />
       <HomeStack.Screen name="Profile" component={ProfileScreen} />
     </HomeStack.Navigator>
@@ -31,7 +31,6 @@ function HomeStackScreen() {
 function NotificationsStackScreen({ navigation }) {
     return (
       <HomeStack.Screen name="Notifications" component={NotificationScreen} />
-
     );
 }
 
@@ -62,8 +61,17 @@ function bottomTabScreen() {
             ),
           
           }}/>
-        <Tab.Screen name="Amount" component={AmountScreen} />
-
+        <Tab.Screen name="Amount" component={AmountScreen} options={{
+          tabBarIcon:({focused, size})=>
+            (
+              <Dollar
+              name={"dollar"}
+              size = {30}
+              color= {colors.primary}
+              />
+            ),
+          
+          }}/>
     </Tab.Navigator>
   );
 }

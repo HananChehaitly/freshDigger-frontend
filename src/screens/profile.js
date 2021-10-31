@@ -12,7 +12,7 @@ export default function ProfileScreen({route,  navigation }) {
   const [userId, setUsedId]  = useState(route.params["userId"]); 
     console.log(userId);
     const [userData, setUserData] = useState(null);
-    let tokenStr = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NDYyNTM3LCJleHAiOjE2MzU0NjYxMzcsIm5iZiI6MTYzNTQ2MjUzNywianRpIjoiTmlIeWJTNTkzemxvQWtnMyIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4BaD4miwsLYFbwjdRXygSGuZl9LB1xkXYgw2-FnFrP8';
+    let tokenStr = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NjAyMjU2LCJleHAiOjE2MzU2MDU4NTYsIm5iZiI6MTYzNTYwMjI1NiwianRpIjoibm53ZWk5bDZQbldRWTFScCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.gew-4j7hbeC7vXv0aPD4wvfhg_KjfkI_CMEkHLOWtSY';
     
     const getProfile = async () => {  
 

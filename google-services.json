@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "365154839722",
+    "project_id": "freshdigger-2c1d0",
+    "storage_bucket": "freshdigger-2c1d0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365154839722:android:794eec179d592ddbd474d3",
+        "android_client_info": {
+          "package_name": "com.sefactory.freshDigger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "365154839722-of4nkv6ih3qtkvfernrbve0aq35ae7m6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcencYHAXRhvnMu4Risc4lpbeQ9hA6tLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "365154839722-of4nkv6ih3qtkvfernrbve0aq35ae7m6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

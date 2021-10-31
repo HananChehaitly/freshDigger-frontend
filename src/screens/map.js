@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions, FlatList, TouchableOpacity, Button, ActivityIndicator, DynamicColorIOS} from 'react-native';
+import { Text, View, StyleSheet, Dimensions, FlatList, TouchableOpacity, Button, ActivityIndicator, DynamicColorIOS , Modal, Alert, Pressable} from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Title } from 'react-native-paper';
@@ -8,10 +8,11 @@ import axios from 'react-native-axios';
 import { colors} from '../constants/palette';
 import MyButton from '../components/ButtonCustom';
 
+
 export default function App({navigation}){
   const[location, setLocation] = useState(null)
   const[pins,setPin]= useState(null)
-
+  const [modalVisible, setModalVisible] = useState(false);
   
   const getLocationAsync = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
@@ -23,10 +24,10 @@ export default function App({navigation}){
       setLocation( currentlocation );
 
       const response = await  axios.get(`${BASE_API_URL}/api/get-businesses`, { headers:{
-      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NDYyNTM3LCJleHAiOjE2MzU0NjYxMzcsIm5iZiI6MTYzNTQ2MjUzNywianRpIjoiTmlIeWJTNTkzemxvQWtnMyIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4BaD4miwsLYFbwjdRXygSGuZl9LB1xkXYgw2-FnFrP8`
+      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NjEyNzMwLCJleHAiOjE2MzU2MTYzMzAsIm5iZiI6MTYzNTYxMjczMCwianRpIjoiRGo2cmZSd2R6Y3NReEphaCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.B9AJfm2LZLHsLQALvboAAZD7CDvO4DIHIsioLXU8eww`
       }} 
     );
-    // console.log(response.data);
+    console.log(location);
     setPin(response);  
   }
  
@@ -36,12 +37,14 @@ export default function App({navigation}){
 
   if(!location){
    return (
+    
      <View
      style = {{
        flex:1,
        alignItems: 'center',
        justifyContent: 'center',
      }}>
+       
        <ActivityIndicator size='large' color={colors.primary_light}/>
      </View>
    ) ;
@@ -51,7 +54,6 @@ export default function App({navigation}){
   }
      
   const checkRate = () =>{
-    console.log('hiii')
     {navigation.navigate('Rate')}
   }
 
@@ -62,26 +64,31 @@ export default function App({navigation}){
         showsUserLocation
         style ={styles.map}
         region={{ latitude: location.coords.latitude , longitude: location.coords.longitude , latitudeDelta: 0.022, longitudeDelta: 0.0421 }}
+       // region={{ latitude: location.coords.latitude , longitude: location.coords.longitude , latitudeDelta: 0.022, longitudeDelta: 0.0421 }}
         >
-   {pins && <FlatList
+    {pins && <FlatList
       data = {pins.data}
       keyExtractor={item => item.id}
       renderItem={({item}) => (
         <Marker 
         color = "pink"
          coordinate={{
-           latitude: `${item.latitude}`,  
-           longitude: `${item.longitude}`   
+          latitude: Number(item.latitude),  
+          longitude: Number(item.longitude) 
+          //  latitude: `${item.latitude}`,  
+          //  longitude: `${item.longitude}`   
           }}> 
    {/* image={require('../assets/marker.png')} */}
-           <Callout  onPress ={()=>{checkProfile(item.id);}}>
-             <View style={{padding: 2}}>
-              <Text>Business Name</Text>
-              <Text>Business Name</Text>
-              </View>
-             </Callout>   
+           <Callout  onPress ={()=>{checkProfile(item.id);}} 
+                    style={styles.callout}
+                  >
+                    <Text style={styles.title}>
+											{item.name} 
+                    </Text>
+                  
+            </Callout>
         </Marker>  
-       )} /> }
+       )} /> } 
        </MapView>
     }
     <View
@@ -96,6 +103,7 @@ export default function App({navigation}){
       
     </View>
     </View>
+  
     );
 }
 const styles = StyleSheet.create({
@@ -143,5 +151,20 @@ btn: {
   marginStart: 15,
 },
 
+ callout: {
+  backgroundColor: "white",
+  borderRadius: 4,
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 4,
+},
+ title: {
+    color: "black",
+    fontSize: 14,
+    lineHeight: 18,
+    flex: 1,
+    //fontFamily: 
+ },
+ 
 
 });
