@@ -1,1 +1,1 @@
-export default BASE_API_URL = 'http://10.200.0.168:8001';
+export default BASE_API_URL = 'http://192.168.1.8:8001';

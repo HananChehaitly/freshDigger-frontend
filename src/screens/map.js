@@ -7,6 +7,7 @@ import BASE_API_URL from '../services/api/BaseUrl';
 import axios from 'react-native-axios';
 import { colors} from '../constants/palette';
 import MyButton from '../components/ButtonCustom';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 
 export default function App({navigation}){
@@ -24,7 +25,7 @@ export default function App({navigation}){
       setLocation( currentlocation );
 
       const response = await  axios.get(`${BASE_API_URL}/api/get-businesses`, { headers:{
-      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NjEyNzMwLCJleHAiOjE2MzU2MTYzMzAsIm5iZiI6MTYzNTYxMjczMCwianRpIjoiRGo2cmZSd2R6Y3NReEphaCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.B9AJfm2LZLHsLQALvboAAZD7CDvO4DIHIsioLXU8eww`
+      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NzI2MjUxLCJleHAiOjE2MzU3Mjk4NTEsIm5iZiI6MTYzNTcyNjI1MSwianRpIjoieXNDaGFvaVJoc1kxTEdZayIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.GGv-SleC_NdI3DMp8cHnN5npok4VzzVlw69vT4G_uvg`
       }} 
     );
     console.log(location);
@@ -37,7 +38,6 @@ export default function App({navigation}){
 
   if(!location){
    return (
-    
      <View
      style = {{
        flex:1,
@@ -57,39 +57,40 @@ export default function App({navigation}){
     {navigation.navigate('Rate')}
   }
 
-
   return (
     <View style={styles.container}> 
     {location && <MapView
         showsUserLocation
         style ={styles.map}
         region={{ latitude: location.coords.latitude , longitude: location.coords.longitude , latitudeDelta: 0.022, longitudeDelta: 0.0421 }}
-       // region={{ latitude: location.coords.latitude , longitude: location.coords.longitude , latitudeDelta: 0.022, longitudeDelta: 0.0421 }}
         >
-    {pins && <FlatList
-      data = {pins.data}
-      keyExtractor={item => item.id}
-      renderItem={({item}) => (
-        <Marker 
-        color = "pink"
-         coordinate={{
-          latitude: Number(item.latitude),  
-          longitude: Number(item.longitude) 
-          //  latitude: `${item.latitude}`,  
-          //  longitude: `${item.longitude}`   
-          }}> 
-   {/* image={require('../assets/marker.png')} */}
-           <Callout  onPress ={()=>{checkProfile(item.id);}} 
+   {pins &&
+            pins.data.map((item) => {
+              return (
+                <Marker
+                  key={item.id}
+                  color="pink"
+                  coordinate={{
+                    latitude: Number(item.latitude),
+                    longitude: Number(item.longitude),
+                    //  latitude: `${item.latitude}`,
+                    //  longitude: `${item.longitude}`
+                  }}
+                >
+                  <Callout
+                    onPress={() => {
+                      checkProfile(item.id);
+                    }}
                     style={styles.callout}
                   >
-                    <Text style={styles.title}>
-											{item.name} 
-                    </Text>
-                  
-            </Callout>
-        </Marker>  
-       )} /> } 
-       </MapView>
+                    <View>
+                      <Text style={styles.title}>{item.name}</Text>
+                    </View>
+                  </Callout>
+                </Marker>
+              );
+            })}
+       </MapView> 
     }
     <View
         style={{

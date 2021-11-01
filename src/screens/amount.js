@@ -16,7 +16,7 @@ export default function MainProject({route, navigation}) {
       "amount": amount
     },
     {headers:{
-      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NjEyNzMwLCJleHAiOjE2MzU2MTYzMzAsIm5iZiI6MTYzNTYxMjczMCwianRpIjoiRGo2cmZSd2R6Y3NReEphaCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.B9AJfm2LZLHsLQALvboAAZD7CDvO4DIHIsioLXU8eww` 
+      'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1Njk0NjIwLCJleHAiOjE2MzU2OTgyMjAsIm5iZiI6MTYzNTY5NDYyMCwianRpIjoiaW1Od01sY2NraG5HNVFvMCIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.U6EqC7vLiOQlr8ilMeqiWlKsuueSSnUFGEGCrDK-FD0` 
     }}
     ); 
     
