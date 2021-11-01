@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: shadows.md.x, height: shadows.md.y },
         paddingHorizontal: 30,
         height: 48,
-        marginTop: 5,
+        marginTop: 30,
     }
 });

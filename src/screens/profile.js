@@ -1,39 +1,76 @@
 import React , { useState, useEffect } from 'react';
-import {View,  StyleSheet,  Image, SafeAreaView } from 'react-native';
+import {View,  StyleSheet,  Image, SafeAreaView , ActivityIndicator} from 'react-native';
 import {Avatar, Title, Caption, Text, TouchableRipple} from 'react-native-paper';
 import MyButton from '../components/ButtonCustom';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import BASE_API_URL from '../services/api/BaseUrl';
 import axios from 'axios';
 import { colors } from '../constants/palette';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function ProfileScreen({route,  navigation }) {
  // const [userId, setUsedId]  = useState("'"+route.params["userId"]+"'"); 
   const [userId, setUsedId]  = useState(route.params["userId"]); 
-    console.log(userId);
-    const [userData, setUserData] = useState(null);
-    let tokenStr = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1NzI2MjUxLCJleHAiOjE2MzU3Mjk4NTEsIm5iZiI6MTYzNTcyNjI1MSwianRpIjoieXNDaGFvaVJoc1kxTEdZayIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.GGv-SleC_NdI3DMp8cHnN5npok4VzzVlw69vT4G_uvg';
-    
-    const getProfile = async () => {  
+  const [token, setToken] =useState(null);
+  const [userData, setUserData] = useState(null);
+
+ 
+//   const getToken = async () => {
+//     try {
+//       const tok = await AsyncStorage.getItem('@storage_Key') 
+//       setToken(tok);
+//     } catch(e) {
+//       console.log(e);
+//     }
+//     console.log('heyyyyyyyy'); 
+//     console.log(token);
+//   }
+ 
+  const getProfile = async () => { 
 
         const res = await  axios.post(`${BASE_API_URL}/api/get-profile`, 
         {
             "id": userId
         },
         {headers:{
-      'Authorization' : `Bearer ${tokenStr}` 
+      'Authorization' : `Bearer  ${await AsyncStorage.getItem('@storage_Key')}` 
         }}
         ); 
         console.log(res.data);  
-    
         setUserData(res.data)
     }
 
-      useEffect(()=> {
+    useEffect(()=> {
+        // getToken();
         getProfile();
       },[])
-   
+
+if(!userData){
+    return (
+           <View
+          style = {{
+            flex:1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+           
+     
+            <ActivityIndicator size='large' color={colors.primary_light}/>
+          </View>
+        ) ;
+       }
+
+const checkProfile = (id) =>{
+         {navigation.navigate('Profile', { userId: id })}
+       }
+          
+const checkRate = () =>{
+         {navigation.navigate('Rate')}
+    }
+     
     return ( 
+
     <View style={styles.container}>
     {userData && <View >
         <View style={styles.userInfoSection}>

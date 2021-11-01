@@ -16,6 +16,7 @@
     "core-js": "^3.18.3",
     "expo": "~43.0.0",
     "expo-location": "~13.0.4",
+    "expo-notifications": "~0.13.3",
     "expo-status-bar": "~1.1.0",
     "firebase": "^9.2.0",
     "react": "17.0.1",
@@ -25,15 +26,18 @@
     "react-native-chart-kit": "^6.11.0",
     "react-native-code-input": "^1.0.6",
     "react-native-maps": "^0.28.0",
+    "react-native-maps-directions": "^1.8.0",
     "react-native-modals": "^0.22.3",
     "react-native-paper": "^4.9.2",
+    "react-native-safe-area-context": "^3.3.2",
     "react-native-safe-area-view": "^1.1.1",
     "react-native-screens": "^3.8.0",
     "react-native-smooth-pincode-input": "^1.0.9",
     "react-native-svg": "^9.13.3",
     "react-native-vector-icons": "^8.1.0",
     "react-native-web": "0.17.1",
-    "expo-notifications": "~0.13.3"
+    "expo-linear-gradient": "~10.0.3",
+    "@react-native-async-storage/async-storage": "~1.15.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
