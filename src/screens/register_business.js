@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -14,49 +13,61 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../constants/palette';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import * as Location from 'expo-location';
 
-export default function loginScreen({navigation}) {
+export default function RegisterBusiness({navigation}) {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  const [Confirmation_password, setConPassword] = useState(null);
+  const [limit, setLimit] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [location, setLocation] = useState(null);
+  const [name,setName] = useState(null);
+
+
+  const getLocation = async() => {
+
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+     return ('Permission to access location was denied');
+    }
+    const currentlocation = await Location.getCurrentPositionAsync({});
+     
+      setLocation( await currentlocation );
+ }
+
   useEffect(() => {
     StatusBar.setBarStyle('light-content', true);
+    getLocation();
   }, []);
 
-const login= async() => {
+const register= async() => {
   try {
-    const res = await  axios.post(`${BASE_API_URL}/api/login`, {
+    const res = await  axios.post(`${BASE_API_URL}/api/register`, {
       "email" : email,
-      "password":password
-    });
-     await AsyncStorage.setItem('@user_type', ''+res.data['user']['user_type_id']); 
-     await AsyncStorage.setItem('@storage_Key', res.data['access_token']);
-    const user_type = await AsyncStorage.getItem('@user_type')
-    console.log(res.data['user']['user_type_id'])
-    if(user_type == 3){
-      navigation.navigate('BottomTab');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'BottomTab' }],
-        });
-    }
-     else if(user_type == 2){
-      navigation.navigate('BottomTabBus');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'BottomTabBus' }],
-        });
-    }
-    else if(user_type == 1){
-      navigation.navigate('BottomTabAdmin');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'BottomTabAdmin' }],
-        });
-    }
+      "password":password,
+      "latitude": location.coords.latitude ,
+      "longitude": location.coords.longitude,
+      "password_confirmation": Confirmation_password,
+      "phone_number":phone,
+      "name": name,
+      "weekly_limit": limit,
+      "user_type_id": "2"
+    },
+    {headers:{
+        'Authorization' : `Bearer  ${await AsyncStorage.getItem('@storage_Key')}` 
+    }}
+    );  
+     
     }catch(err) {
+    //console.log(email);
+    console.log(password);
+    console.log(location.coords.latitude);
+    console.log(location.coords.longitude);
+     console.log(Confirmation_password);
+     console.log(limit)
     console.log(err);
   }
-  console.log()
  }
 
   return (
@@ -69,8 +80,7 @@ const login= async() => {
         colors={['#000', '#222', '#111']}
         style={styles.container}
       >
-        <Text style={styles.welcomeText}>Welcome Back!</Text>
-        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.welcomeText}>Register Business Profile: </Text>
         <TextInput
           placeholder='Email Address'
           placeholderTextColor='#808e9b'
@@ -88,18 +98,37 @@ const login= async() => {
           textContentType='password'
           onChangeText={(password) => setPassword(password)}
         />
-        <TouchableOpacity style={styles.loginButton} onPress={()=>login()}>
-          <Text style={styles.loginButtonText}>Login</Text>
+        <TextInput
+          placeholder='Confirm Password'
+          placeholderTextColor='#808e9b'
+          style={styles.input}
+          secureTextEntry={true}
+          textContentType='password'
+          onChangeText={(password) => setConPassword(password)}
+        />
+        <TextInput
+          placeholder='Name'
+          placeholderTextColor='#808e9b'
+          style={styles.input}
+          onChangeText={(name) => setName(name)}
+        />
+        <TextInput
+          placeholder='Phone Number'
+          placeholderTextColor='#808e9b'
+          style={styles.input}
+          onChangeText={(phone) => setPhone(phone)}
+        />
+        <TextInput
+          placeholder='Weekly Limit'
+          placeholderTextColor='#808e9b'
+          style={styles.input}
+          onChangeText={(limit) => setLimit(limit)}
+        />
+  
+
+        <TouchableOpacity style={styles.loginButton} onPress={()=>register()}>
+          <Text style={styles.loginButtonText}>Register</Text>
         </TouchableOpacity>
- 
-        <View style={styles.signUpTextView}>
-          <Text style={styles.signUpText}>Don't have an account?</Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate('Signup')}}>
-            <Text style={[styles.signUpText, { color: colors.primary }]}>
-              {' Sign Up'}
-            </Text>
-          </TouchableOpacity>
-        </View>
       </LinearGradient>
     </TouchableWithoutFeedback>
   );
@@ -112,7 +141,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   welcomeText: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: '900',
     color: '#fff',
     alignSelf: 'center',
@@ -160,15 +189,5 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   
-  signUpTextView: {
-    marginTop: 40,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  signUpText: {
-    color: '#808e9b',
-    fontSize: 20,
-    fontWeight: '500',
-  },
+ 
 });

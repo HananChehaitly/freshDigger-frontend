@@ -9,11 +9,16 @@ import signupScreen from './src/screens/register'
 import HomeScreen from './src/screens/map'
 import AmountScreen  from './src/screens/amount';
 import ProfileScreen from './src/screens/profile';
-import NotificationScreen from './src/screens/notifications';
+import NotificationsScreen from './src/screens/notifications';
 import RateScreen from './src/screens/rate';
 import { colors } from './src/constants/palette';
 import Design from 'react-native-vector-icons/AntDesign';
 import Dollar from 'react-native-vector-icons/FontAwesome';
+import RegisterBusiness from './src/screens/register_business';
+import RemoveAccounts from './src/screens/RemoveAccounts';
+import Delete from 'react-native-vector-icons/AntDesign';
+import Notifications from './src/screens/businessNotifications';
+import edit from './src/screens/edit';
 
 const HomeStack = createNativeStackNavigator();
 
@@ -27,12 +32,6 @@ function HomeStackScreen() {
   );
 }
 
-
-function NotificationsStackScreen({ navigation }) {
-    return (
-      <HomeStack.Screen name="Notifications" component={NotificationScreen} />
-    );
-}
 
 const Tab = createBottomTabNavigator();
 
@@ -50,7 +49,7 @@ function bottomTabScreen() {
             ),
           
           }}  />
-        <Tab.Screen name="Notifications" component={NotificationsStackScreen} options={{
+        <Tab.Screen name="Notifications" component={NotificationsScreen} options={{
           tabBarIcon:({focused, size})=>
             (
               <Design
@@ -70,11 +69,69 @@ function bottomTabScreen() {
               color= {colors.primary}
               />
             ),
-          
           }}/>
     </Tab.Navigator>
   );
 }
+
+const TabAd = createBottomTabNavigator();
+
+function bottomTabAdminScreen() {
+  return (
+    <TabAd.Navigator  screenOptions={{ headerShown: false }}>
+        <TabAd.Screen name="Home" component={RegisterBusiness} options={{
+          tabBarIcon:({focused, size})=>
+            (
+              <Icon
+              name={"home"}
+              size = {40}
+              color= {colors.primary}
+              />
+            ),
+          }}  />
+        <TabAd.Screen name="Delete" component={RemoveAccounts} options={{
+          tabBarIcon:({focused, size})=>
+            (
+              <Delete
+              name={"deleteuser"}
+              size = {30}
+              color= {colors.primary}
+              />
+            ), 
+          }}  />
+    </TabAd.Navigator>
+  );
+}
+
+const TabBus = createBottomTabNavigator();
+
+function bottomTabBusScreen() {
+  return (
+    <TabBus.Navigator  screenOptions={{ headerShown: false }}>
+        <TabBus.Screen name="Home" component={Notifications} options={{
+          tabBarIcon:({focused, size})=>
+            (
+              <Icon
+              name={"home"}
+              size = {40}
+              color= {colors.primary}
+              />
+            ),
+          }}  />
+        <TabBus.Screen name="Edit" component={edit} options={{
+          tabBarIcon:({focused, size})=>
+            (
+              <Design
+              name={"edit"}
+              size = {30}
+              color= {colors.primary}
+              />
+            ), 
+          }}  />
+    </TabBus.Navigator>
+  );
+}
+
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -86,6 +143,13 @@ export default function App() {
       <Stack.Screen name="BottomTab" component={bottomTabScreen} options={{
             title:""
           }}/>
+      <Stack.Screen name="BottomTabAdmin" component={bottomTabAdminScreen} options={{
+            title:""
+          }}/>
+      <Stack.Screen name="BottomTabBus" component={bottomTabBusScreen} options={{
+            title:""
+          }}/>  
+
     </Stack.Navigator>
     </NavigationContainer>
   );

@@ -19,16 +19,10 @@ export default function App({navigation}){
   const[pins,setPin]= useState(null)
   const [modalVisible, setModalVisible] = useState(false);
   const [token, setToken] =useState( null );
-  
-  // const getToken = async () => {
-  //   try {
-  //     const tok = await AsyncStorage.getItem('@storage_Key')
-  //     setToken(tok);
-  //   } catch(e) {
-  //     console.log(e);
-  //   }
-  //   console.log(token);
-  // }
+  const[time,setTime] =useState(null);
+  const[showroad, setRoad]=useState(false);
+  const[coordinates, setCoordinates]=useState(null);
+  const [name, setName] = useState(null);
 
   const getLocationAsync = async () => {
       try{
@@ -50,12 +44,28 @@ export default function App({navigation}){
   } 
 
 catch(e){
-  console.log('hiiiii');
-console.log(e);
+  console.log(e);
 }
 }
+  const search = async() => {
+    console.log(name);
+    try{
+    const response = await  axios.post(`${BASE_API_URL}/api/search-businesses`, 
+    {
+      "name": name
+    },
+    {headers:{
+        Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+      }} 
+    );
+      setPin( await response);
+    }
+    catch(e){
+      console.log(e);
+    }
+  }
+
   useEffect(()=> {
-    // getToken();
     getLocationAsync();
   },[])
 
@@ -71,48 +81,39 @@ console.log(e);
      </View>
    ) ;
   }
-  const checkProfile = (id) =>{
-    {navigation.navigate('Profile', { userId: id })}
+  const checkProfile = (id, time) =>{
+    {navigation.navigate('Profile', { userId: id , duration: time})}
   }
      
   const checkRate = () =>{
     {navigation.navigate('Rate')}
   }
 
-  
-  // const origin = {latitude: 33.86177095280986, longitude: 35.48983997810002};
-  // const destination = {latitude: 33.90158924401346, longitude: 35.480891246139684};
-
-
-
   const GOOGLE_MAPS_APIKEY = 'AIzaSyAa7Ld1wuUthv8BSZZ8rpg00D6s8bXDjaw';
   
   const viewDirections = (lat, long) =>{
-  //  <View style={{position: 'absolute'}}>
-  //   <MapViewDirections     
-  //         origin={{latitude: location.coords.latitude , longitude: location.coords.longitude} }
-  //         destination={{latitude: lat, longitude: long}}
-  //         apikey={GOOGLE_MAPS_APIKEY}
-  //         strokeWidth={4}
-  //         strokeColor={colors.primary_light}
-  //     />
-  //  </View>
+   setCoordinates({
+    latitude: lat,
+    longitude: long,
+  })
+  setRoad(true)
   }
       
 
-  return (
+  return (  
     <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}}>
     <View style={styles.container}> 
-    {location && <MapView
+    {location && 
+      <MapView
         showsUserLocation
         style ={styles.map}
         region={{ latitude: location.coords.latitude , longitude: location.coords.longitude , latitudeDelta: 0.022, longitudeDelta: 0.0421 }}
-        >
+        >        
     {pins &&
             pins.data.map((item) => {
               return (
                 <Marker
-                  pinColor={colors.primary_light}
+                  // pinColor={colors.primary_light}
                   key={item.id}
                   coordinate={{
                     latitude: Number(item.latitude),
@@ -120,34 +121,46 @@ console.log(e);
                    }}
                    onPress={() => viewDirections(Number(item.latitude), Number(item.longitude))}
                    > 
-
-                  <Callout onPress={() => {checkProfile(item.id); }}
+                  <Callout onPress={() => {checkProfile(item.id,{time}); }}
                     style={styles.callout}>
                       <Text style={styles.title}>{item.name}</Text> 
                       <View style={{marginBottom: 2, marginLeft:2}}>
                       <Pin name="caretright" color={colors.primary_light} size={20}/>
-                      </View>
+                      </View>        
                   </Callout>
                 </Marker>
               );
             })}
-      
-       </MapView> 
+            {showroad && <MapViewDirections     
+                          origin={{latitude: location.coords.latitude , longitude: location.coords.longitude}}
+                          destination={coordinates}
+                          apikey={GOOGLE_MAPS_APIKEY}
+                          strokeWidth={4}
+                          strokeColor={colors.primary_light}
+                          onReady= {result=>{
+                            setTime(result.duration)
+                            console.log(time)
+                          }}
+                      />
+            }
+      </MapView>
     }
     
     <View style={styles.searchBox}>
           <TextInput 
           placeholder="Search here"
           placeholderTextColor="#808080"
-          onPressOut={Keyboard.dismiss()}
           autoCapitalize="none" 
           style={{flex:1,padding:0}}
-        />
+          onChangeText={(name) => setName(name)}
+          />
+        <TouchableOpacity onPress={() => search()}> 
         <Ionicons name="ios-search" size={20}  color={colors.primary_light}/> 
+        </TouchableOpacity>
     </View>
     
     <View
-        style={{
+        style={{ 
             position: 'absolute',//use absolute position to show button on top of the map
             bottom: 20, //for center align
             width: '55%' //for align to right

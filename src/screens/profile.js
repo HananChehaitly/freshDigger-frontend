@@ -10,25 +10,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function ProfileScreen({route,  navigation }) {
- // const [userId, setUsedId]  = useState("'"+route.params["userId"]+"'"); 
   const [userId, setUsedId]  = useState(route.params["userId"]); 
+  const time = Math.round(route.params["duration"]["time"]);
   const [token, setToken] =useState(null);
   const [userData, setUserData] = useState(null);
-
- 
-//   const getToken = async () => {
-//     try {
-//       const tok = await AsyncStorage.getItem('@storage_Key') 
-//       setToken(tok);
-//     } catch(e) {
-//       console.log(e);
-//     }
-//     console.log('heyyyyyyyy'); 
-//     console.log(token);
-//   }
- 
+   console.log(time);
   const getProfile = async () => { 
-
         const res = await  axios.post(`${BASE_API_URL}/api/get-profile`, 
         {
             "id": userId
@@ -41,8 +28,7 @@ export default function ProfileScreen({route,  navigation }) {
         setUserData(res.data)
     }
 
-    useEffect(()=> {
-        // getToken();
+  useEffect(()=> {
         getProfile();
       },[])
 
@@ -54,20 +40,11 @@ if(!userData){
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-           
-     
+
             <ActivityIndicator size='large' color={colors.primary_light}/>
           </View>
         ) ;
-       }
-
-const checkProfile = (id) =>{
-         {navigation.navigate('Profile', { userId: id })}
-       }
-          
-const checkRate = () =>{
-         {navigation.navigate('Rate')}
-    }
+}
      
     return ( 
 
@@ -76,21 +53,26 @@ const checkRate = () =>{
         <View style={styles.userInfoSection}>
             <View  style={{flexDirection: 'row', marginTop: 10, justifyContent:"space-Between"}}>
                 <Image
-                  style={{width:120, height:120, borderRadius:100}}
-                  source ={require('./store.png')}
-                
+                  style={{width:140, height:140, borderRadius:100}}
+                  source ={{uri: `${BASE_API_URL}${userData.picture_url}`}}
                 />
             <View style={{marginLeft: 20}}>
-                <Title style={ styles.title }>{userData.name} </Title>
+                <Title style={ styles.title }>{userData.name}</Title>
                 <View>
                     <Caption style={styles.caption}>{userData.bio}</Caption>
                 </View>
-               
-        </View>
-
+            
+                    
+            </View>
+          
       </View>
       </View>
-    <View style={[styles.userInfoSection,{justifyContent:"space-between"}]}>
+      <View style={styles.button}>
+                        <Text  style={styles.buttonText}> 
+                                Estimated time to destination: {time} min
+                        </Text>
+      </View>
+      <View style={[styles.userInfoSection,{justifyContent:"space-between"}]}>
         <View style={{   marginTop:  35,}}>
             <View style={styles.row}>
                 <Icon name = "map-marker-radius"  color={colors.primary} size={20}/>
@@ -105,8 +87,8 @@ const checkRate = () =>{
                 <Text style={{color: colors.primary_light, marginLeft:20}}>{userData.email}</Text>
             </View>
         </View>
-        <View style={{marginTop:40, marginRight:12}}>
-            <MyButton text ='Ping for Offer'/>
+        <View style={{marginHorizontal:70}}>
+            <MyButton  text ='Ping for Offer'/>
         </View>
         
                  
@@ -115,9 +97,7 @@ const checkRate = () =>{
 }
 </View>
     );
-
-
-};
+}
 
 
 const styles = StyleSheet.create({
@@ -129,7 +109,7 @@ const styles = StyleSheet.create({
   
     userInfoSection: {
         marginLeft: 20,
-        flexDirection:"row",
+        
     },
     title: {
         fontSize: 20,
@@ -147,8 +127,22 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
-        marginBottom: 10,
-     
-       
+        marginBottom: 10,  
     },
-});
+
+    button:{
+        marginTop:30,
+        marginHorizontal:35,
+        flexDirection: 'row',
+        borderRadius:50,
+        justifyContent: 'center',
+        alignItems: 'center',
+       // backgroundColor: '#abbab0' ,
+        },
+    buttonText:{
+    fontSize: 16,
+    fontWeight: '500',
+    color: colors.black,        
+    }
+}
+);

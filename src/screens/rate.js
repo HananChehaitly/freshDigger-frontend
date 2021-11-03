@@ -6,6 +6,8 @@ import MyButton from '../components/ButtonCustom';
 import { colors, shadows } from '../constants/palette';
 import { LineChart } from 'react-native-chart-kit'; 
 import { Dimensions } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -28,12 +30,12 @@ export default function RateScreen({navigation}){
     
     const getRate =  async() => { 
         const resp =  await axios.get(`${BASE_API_URL}/api/scrap`, { headers:{
-            'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1Nzg3OTY2LCJleHAiOjE2MzU3OTE1NjYsIm5iZiI6MTYzNTc4Nzk2NiwianRpIjoiM0ZQekVHUFJzcXF3MEgzaiIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.OtaTO6QQO9TK9B59RfjhYkW9eLPiPogFNypM1tegJAg`
+            'Authorization' : `Bearer  ${await AsyncStorage.getItem('@storage_Key')}`
   
         }} 
         );
         const response =  await axios.get(`${BASE_API_URL}/api/draw-chart`, { headers:{
-            'Authorization' : `Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xOTIuMTY4LjEuODo4MDAxXC9hcGlcL2xvZ2luIiwiaWF0IjoxNjM1Nzg3OTY2LCJleHAiOjE2MzU3OTE1NjYsIm5iZiI6MTYzNTc4Nzk2NiwianRpIjoiM0ZQekVHUFJzcXF3MEgzaiIsInN1YiI6MSwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.OtaTO6QQO9TK9B59RfjhYkW9eLPiPogFNypM1tegJAg`
+            'Authorization' : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
         }}  
         );
          

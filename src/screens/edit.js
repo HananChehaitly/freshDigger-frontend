@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
@@ -9,55 +8,63 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Button,
+  Image
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../constants/palette';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import * as ImagePicker from 'expo-image-picker';
 
-export default function loginScreen({navigation}) {
+export default function edit({navigation}) {
+    
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  useEffect(() => {
-    StatusBar.setBarStyle('light-content', true);
-  }, []);
+  const [Confirmation_password, setConPassword] = useState(null);
+  const [phone, setPhone] = useState(null);
+  const [name, setName] = useState(null);
+  const [image, setImage] = useState(null);
+  const [str, setStr] = useState(null);
 
-const login= async() => {
-  try {
-    const res = await  axios.post(`${BASE_API_URL}/api/login`, {
-      "email" : email,
-      "password":password
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      quality: 1,
+      base64: true
     });
-     await AsyncStorage.setItem('@user_type', ''+res.data['user']['user_type_id']); 
-     await AsyncStorage.setItem('@storage_Key', res.data['access_token']);
-    const user_type = await AsyncStorage.getItem('@user_type')
-    console.log(res.data['user']['user_type_id'])
-    if(user_type == 3){
-      navigation.navigate('BottomTab');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'BottomTab' }],
-        });
+    if (!result.cancelled) {
+      setStr(result.base64);
+      setImage(result.uri); 
     }
-     else if(user_type == 2){
-      navigation.navigate('BottomTabBus');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'BottomTabBus' }],
-        });
+
+  };
+
+  const save = async () => {
+    try {
+      const res = await axios.post(`${BASE_API_URL}/api/add-picture`, {
+          "image" :str
+        },
+        {headers:{
+          'Authorization' : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+          }}
+      );      //await AsyncStorage.setItem('@image', res.data['p_path']);
+      
+    } catch(err) {
+      console.log(err); 
     }
-    else if(user_type == 1){
-      navigation.navigate('BottomTabAdmin');
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'BottomTabAdmin' }],
-        });
-    }
-    }catch(err) {
-    console.log(err);
   }
-  console.log()
- }
+
+ useEffect(() => {
+  (async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  });
+  StatusBar.setBarStyle('light-content', true);
+}, []);
 
   return (
     <TouchableWithoutFeedback
@@ -69,8 +76,7 @@ const login= async() => {
         colors={['#000', '#222', '#111']}
         style={styles.container}
       >
-        <Text style={styles.welcomeText}>Welcome Back!</Text>
-        <Text style={styles.loginText}>Login</Text>
+        <Text style={styles.welcomeText}>Edit Profile here</Text>
         <TextInput
           placeholder='Email Address'
           placeholderTextColor='#808e9b'
@@ -88,20 +94,26 @@ const login= async() => {
           textContentType='password'
           onChangeText={(password) => setPassword(password)}
         />
-        <TouchableOpacity style={styles.loginButton} onPress={()=>login()}>
-          <Text style={styles.loginButtonText}>Login</Text>
+        <TextInput
+          placeholder='Confirm Password'
+          placeholderTextColor='#808e9b'
+          style={styles.input}
+          secureTextEntry={true}
+          textContentType='password'
+          onChangeText={(password) => setConPassword(password)}
+        />
+      <View style={{marginTop:25}}>
+        <Button title="Pick an image from camera roll" onPress={pickImage}  color={colors.primary}/>
+        {image && <Image source={{ uri: image }} style={styles.image}/>}
+      </View> 
+       
+        <TouchableOpacity style={styles.loginButton} onPress={save}>
+          <Text style={styles.loginButtonText}>Save Changes</Text>
         </TouchableOpacity>
- 
-        <View style={styles.signUpTextView}>
-          <Text style={styles.signUpText}>Don't have an account?</Text>
-          <TouchableOpacity onPress={()=>{navigation.navigate('Signup')}}>
-            <Text style={[styles.signUpText, { color: colors.primary }]}>
-              {' Sign Up'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+      
       </LinearGradient>
     </TouchableWithoutFeedback>
+    
   );
 }
 
@@ -112,24 +124,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   welcomeText: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: '900',
     color: '#fff',
     alignSelf: 'center',
-  },
-  loginText: {
-    color: '#fff',
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 10
   },
   input: {
     width: '100%',
     height: 50,
     backgroundColor: '#333',
     borderRadius: 6,
-    marginTop: 10,
+    marginTop: 15,
     paddingHorizontal: 10,
     fontSize: 16,
     color: '#808e9b',

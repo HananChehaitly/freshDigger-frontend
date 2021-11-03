@@ -1,116 +1,168 @@
-import React , { useState, useEffect } from 'react';
-import {View,  StyleSheet,  Image, SafeAreaView, Button } from 'react-native';
-import {Avatar, Title, Caption, Text, TouchableRipple} from 'react-native-paper';
-import ButtonCustom from '../components/ButtonCustom';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import BASE_API_URL from '../services/api/BaseUrl';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  ActivityIndicator,
+  StatusBar,
+  Image,
+  Text,
+  TouchableOpacity,
+  Alert,
+  View,
+  Button
+} from 'react-native';
+import Axios from 'axios';
+import Icon from 'react-native-vector-icons/Fontisto';
+import { colors } from '../constants/palette';
+import { Constants } from 'expo-constants';
+import *  as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });  
+
+export default function NotificationsScreen({ navigation }) {
+
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
+  
+  StatusBar.setBarStyle('dark-content');
+
+  navigation.setOptions({
+    title: 'Notifications',
+    headerLeft: () => null,
+  });
+
+  const [notifications, setNotifications] = useState(null);
 
 
-export default function NotificationScreen({navigation }) {
+  const getNotifications = ()=>{
+      setNotifications([{"amount":400},{"amount":200}])
+  }
 
+  useEffect(() => {
+
+      getNotifications() ; 
+
+      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        setNotification(notification);
+      });
+  
+      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response);
+      });
+  
+      return () => {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
+    
+    }
+    ,[])
+
+  if (!notifications) {
     return (
-             <View style={styles.container}>
-                <View style={styles.userInfoSection}>
-                    <View  style={{flexDirection: 'row', marginTop: 15}}>
-                        <Avatar.Image
-                          source ={{  
-                            uri:'../assets/icon.png',
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <ActivityIndicator size='large' />
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1, paddingVertical: 10 }}>
+      {notifications && notifications.map((item)=>{
+          return( 
+          <View
+                style={{
+                    margin: 4,
+                    backgroundColor: '#fff',
+                    marginRight: 30,
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                    borderRadius: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    height: 60,
+                }}>
+                <View>
+                    <Image
+                    style={{ width: 50, height: 50, borderRadius: 100 }}
+                    source={require('./store.png')}
+                    />
+                </View>
+                <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                    <Text
+                    s3tyle={{ fontSize: 16 }}
+                    >{item.name}</Text>
+                    <Text
+                    s3tyle={{ fontSize: 10 }}
+                    > 1 $ = {item.rates} LBP</Text>
+                </View>
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                    // onPress={() => {
+                    //    ;   //change what happens on press
+                    // }} 
+                    >
+                    <Icon name='reply' color ={colors.primary_light} style={{ marginLeft: 14 }} size={20} />
+                    </TouchableOpacity>
+                </View>
+                <Text>Your expo push token: {expoPushToken}</Text>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Text>Title: {notification && notification.request.content.title} </Text>
+                    <Text>Body: {notification && notification.request.content.body}</Text>
+                    <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+                    <Button
+                        title="Press to schedule a notification"
+                        onPress={async () => {
+                        await schedulePushNotification();
                         }}
-                        source = {80}
-                        />
-                    <View style={{marginLeft: 20}}>
-                    <Title style={[styles.title,{marginTop:15, marginBottom: 5}]}>hanan </Title>
-                    <Caption stylele={styles.caption}>asaiojdiajais</Caption>
-                    </View>
+                    />
                 </View>
-            </View>
-          
-            <View style={styles.userInfoSection}>
-                <View style={styles.row}>
-                    <Icon name = "map-marker-radius"  color="#E05263" size={20}/>
-                    <Text style={{color: '#E05263', marginLeft:20}}>Beirut, Lebanon</Text>
+
                 </View>
-                <View style={styles.row}>
-                    <Icon name = "phone"  color="#E05263" size={20}/>
-                    <Text style={{color: '#E05263', marginLeft:20}}>+961 71522151</Text>
-                </View>
-                <View style={styles.row}>
-                    <Icon name = "email"  color="#E05263" size={20}/>
-                    <Text style={{color: '#E05263', marginLeft:20}}>email"saija</Text>
-                </View>
-                <View style={styles.buttonBox}>
-                    <View style={styles.buttons}>
-                        <ButtonCustom text ='Ping for Offer' color='#659157'/>
-                    </View>
-                    <ButtonCustom text ='Message' color='#659157'/>
-                </View>
-                </View>
-            </View> 
-            
-            
-            );
-        
-        
-        };
-        
-        
-        const styles = StyleSheet.create({
-            container: {
-                flex: 1,
-            },
-            buttons: {
-                marginRight: 10
-            },
-            buttonBox : {
-                marginTop: 100,
-                marginLeft: 30,
-                flexDirection: 'row',
-            },
-            userInfoSection: {
-                paddingHorizontal: 30,
-                marginBottom: 30,
-            },
-            title: {
-                fontSize: 20,
-                fontWeight: 'bold',
-            },
-            caption: {
-                fontSize: 14,
-                lineHeight: 14,
-                fontWeight:'500'
-            },
-            row: {
-                flexDirection: 'row',
-                marginBottom: 10,
-                marginLeft: 150
-            },
-            infoBoxWrapper: {
-                borderBottomColor: '#A1C084',
-                borderBottomWidth: 1,
-                borderTopColor: '#dddddd',
-                borderTopWidth: 1,
-                flexDirection: 'row',
-                height: 100,
-            },
-            infoBoxWrapper: {
-                width: '50%',
-                alignItems: 'center',
-                justifyContent: 'center',
-            },
-            menuWrapper: {
-                marginTop: 10,
-            },
-            menuItem: {
-                flexDirection: 'row',
-                paddingVertical: 15,
-                paddingHorizontal: 30,
-            },
-            menuItemText: {
-                color: '#A1C084',
-                marginLeft: 20,
-                fontWeight: '600',
-                fontSize: 16,
-                lineHeight: 26
-            },
-        });
+          );
+      })}
+      
+    </View>
+  );
+}
+async function schedulePushNotification() {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "You've got mail! 📬",
+        body: 'Here is the notification body',
+        data: { data: 'goes here' },
+      },
+      trigger: { seconds: 2 },
+    });
+  }
+  
+
+async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    return token;
+  }

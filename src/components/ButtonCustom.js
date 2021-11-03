@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         shadowColor: shadows.md.color,
         shadowOpacity: shadows.md.opacity,
         shadowOffset: { width: shadows.md.x, height: shadows.md.y },
-        paddingHorizontal: 30,
+        paddingHorizontal: 15,
         height: 48,
         marginTop: 30,
     }
