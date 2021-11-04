@@ -14,6 +14,9 @@ import { colors } from '../constants/palette';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+
 
 export default function RegisterBusiness({navigation}) {
   const [email, setEmail] = useState(null);
@@ -23,7 +26,7 @@ export default function RegisterBusiness({navigation}) {
   const [phone, setPhone] = useState(null);
   const [location, setLocation] = useState(null);
   const [name,setName] = useState(null);
-
+  const [token, setToken] =  useState(null);
 
   const getLocation = async() => {
 
@@ -36,13 +39,47 @@ export default function RegisterBusiness({navigation}) {
       setLocation( await currentlocation );
  }
 
+ async function registerForPushNotificationsAsync() {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250], 
+      lightColor: '#FF231F7C',
+    });
+  }
+  console.log(token);
+  return token;
+}
   useEffect(() => {
     StatusBar.setBarStyle('light-content', true);
     getLocation();
+    registerForPushNotificationsAsync().then(token => setToken(token));
+    
   }, []);
 
 const register= async() => {
   try {
+    //use the function that gives expotoken then say setToken(response)
+
     const res = await  axios.post(`${BASE_API_URL}/api/register`, {
       "email" : email,
       "password":password,
@@ -52,6 +89,7 @@ const register= async() => {
       "phone_number":phone,
       "name": name,
       "weekly_limit": limit,
+      "expoToken":token,
       "user_type_id": "2"
     },
     {headers:{
@@ -61,11 +99,13 @@ const register= async() => {
      
     }catch(err) {
     //console.log(email);
+    console.log(token);
     console.log(password);
     console.log(location.coords.latitude);
     console.log(location.coords.longitude);
      console.log(Confirmation_password);
      console.log(limit)
+     
     console.log(err);
   }
  }
@@ -124,7 +164,6 @@ const register= async() => {
           style={styles.input}
           onChangeText={(limit) => setLimit(limit)}
         />
-  
 
         <TouchableOpacity style={styles.loginButton} onPress={()=>register()}>
           <Text style={styles.loginButtonText}>Register</Text>

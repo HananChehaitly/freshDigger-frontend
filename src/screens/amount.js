@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, TextInput,Button, Keyboard, TouchableWithoutFeedback, Text} from 'react-native';
 import MyButton from '../components/ButtonCustom';
-
+import { colors } from '../constants/palette';
 
 export default function MainProject({route, navigation}) {
  
@@ -25,11 +25,18 @@ export default function MainProject({route, navigation}) {
 
 return (
   // Put paragraph here later .
-  
+
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
     <View style={styles.MainContainer}>
+    
+  <View style={{marginHorizontal:20, marginBottom:40 }} >
+      <Text style ={{ flexDirection: 'row', fontWeight:'bold', backgroundColor:'#e6ffee', fontSize:20}}>We are commited to increasing transparency in the Exchange market.
+      
+      Please help us make sure our profiles do not buy above their approved margins.</Text>
+
+  </View> 
       <TextInput
-         placeholder="Enter amount in $"
+         placeholder="Confirm amount you are about to sell in $"
          style={styles.TextInputStyle}
          keyboardType={'numeric'}
          onChangeText={(amount) => setAmount(amount)}
@@ -39,7 +46,8 @@ return (
     </View> 
   </View>
   </TouchableWithoutFeedback> 
-
+ 
+ 
   );
  
 }
@@ -56,7 +64,7 @@ margin: 10
 },
  
 TextInputStyle: {
-fontSize: 20,
+fontSize: 15,
 textAlign: 'center',
 },
  

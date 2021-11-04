@@ -32,6 +32,16 @@ function HomeStackScreen() {
   );
 }
 
+const NotificationsStack = createNativeStackNavigator();
+
+function NotificationsStackScreen() {
+  return (
+    <NotificationsStack.Navigator screenOptions={{ headerShown: false }}>
+      <NotificationsStack.Screen name="Notifications" component={NotificationsScreen} />
+      <NotificationsStack.Screen name="Amount" component={AmountScreen} />
+    </NotificationsStack.Navigator>
+  );
+}
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +59,7 @@ function bottomTabScreen() {
             ),
           
           }}  />
-        <Tab.Screen name="Notifications" component={NotificationsScreen} options={{
+        <Tab.Screen name="Notifications" component={NotificationsStackScreen} options={{
           tabBarIcon:({focused, size})=>
             (
               <Design
@@ -60,16 +70,7 @@ function bottomTabScreen() {
             ),
           
           }}/>
-        <Tab.Screen name="Amount" component={AmountScreen} options={{
-          tabBarIcon:({focused, size})=>
-            (
-              <Dollar
-              name={"dollar"}
-              size = {30}
-              color= {colors.primary}
-              />
-            ),
-          }}/>
+      
     </Tab.Navigator>
   );
 }

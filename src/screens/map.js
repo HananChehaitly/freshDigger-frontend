@@ -39,7 +39,6 @@ export default function App({navigation}){
         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
       }} 
     );
-      console.log(await AsyncStorage.getItem('@storage_Key'));
       setPin( await response);  
   } 
 
@@ -106,6 +105,7 @@ catch(e){
     {location && 
       <MapView
         showsUserLocation
+        showroad
         style ={styles.map}
         region={{ latitude: location.coords.latitude , longitude: location.coords.longitude , latitudeDelta: 0.022, longitudeDelta: 0.0421 }}
         >        
@@ -155,7 +155,7 @@ catch(e){
           onChangeText={(name) => setName(name)}
           />
         <TouchableOpacity onPress={() => search()}> 
-        <Ionicons name="ios-search" size={20}  color={colors.primary_light}/> 
+              <Ionicons name="ios-search" size={20}  color={colors.primary_light}/> 
         </TouchableOpacity>
     </View>
     
@@ -174,7 +174,6 @@ catch(e){
     </TouchableWithoutFeedback>
     );
 }
-
 
 
 const styles = StyleSheet.create({
