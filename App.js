@@ -17,7 +17,7 @@ import Dollar from 'react-native-vector-icons/FontAwesome';
 import RegisterBusiness from './src/screens/register_business';
 import RemoveAccounts from './src/screens/RemoveAccounts';
 import Delete from 'react-native-vector-icons/AntDesign';
-import Notifications from './src/screens/businessNotifications';
+import BusNotifications from './src/screens/businessNotifications';
 import edit from './src/screens/edit';
 
 const HomeStack = createNativeStackNavigator();
@@ -47,7 +47,17 @@ const Tab = createBottomTabNavigator();
 
 function bottomTabScreen() {
   return (
-    <Tab.Navigator  screenOptions={{ headerShown: false }}>
+    <Tab.Navigator  screenOptions={{ headerShown: false,
+      tabBarActiveTintColor: colors.primary,
+      tabBarInactiveTintColor: '#53e684',
+      tabBarShowLabel: true,
+      tabBarAllowFontScaling: false,
+      tabBarKeyboardHidesTabBar: true,
+      tabBarShadowColor: '#FFF',
+      tabBarLabelStyle: {
+        fontWeight: "bold",
+        fontSize: 10,
+      },}}>
         <Tab.Screen name="Home" component={HomeStackScreen} options={{
           tabBarIcon:({focused, size})=>
             (
@@ -79,7 +89,17 @@ const TabAd = createBottomTabNavigator();
 
 function bottomTabAdminScreen() {
   return (
-    <TabAd.Navigator  screenOptions={{ headerShown: false }}>
+    <TabAd.Navigator  screenOptions={{ headerShown: false,
+      tabBarActiveTintColor: colors.primary,
+      tabBarInactiveTintColor: '#53e684',
+      tabBarShowLabel: true,
+      tabBarAllowFontScaling: false,
+      tabBarKeyboardHidesTabBar: true,
+      tabBarShadowColor: '#FFF',
+      tabBarLabelStyle: {
+        fontWeight: "bold",
+        fontSize: 10,
+      },}}>
         <TabAd.Screen name="Home" component={RegisterBusiness} options={{
           tabBarIcon:({focused, size})=>
             (
@@ -108,8 +128,18 @@ const TabBus = createBottomTabNavigator();
 
 function bottomTabBusScreen() {
   return (
-    <TabBus.Navigator  screenOptions={{ headerShown: false }}>
-        <TabBus.Screen name="Home" component={Notifications} options={{
+    <TabBus.Navigator  screenOptions={{ headerShown: false,
+      tabBarActiveTintColor: colors.primary,
+      tabBarInactiveTintColor: '#53e684',
+      tabBarShowLabel: true,
+      tabBarAllowFontScaling: false,
+      tabBarKeyboardHidesTabBar: true,
+      tabBarShadowColor: '#FFF',
+      tabBarLabelStyle: {
+        fontWeight: "bold",
+        fontSize: 10,
+      },}}>
+        <TabBus.Screen name="Home" component={BusNotifications} options={{
           tabBarIcon:({focused, size})=>
             (
               <Icon

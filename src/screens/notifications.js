@@ -8,13 +8,14 @@ import {
   TouchableOpacity,
   Alert,
   View,
-  Button
-} from 'react-native';
+  Button,
+ } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { colors } from '../constants/palette';
 import { Constants } from 'expo-constants';
 import *  as Notifications from 'expo-notifications';
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -38,7 +39,19 @@ export default function NotificationsScreen({ navigation }) {
   });
 
   const [notifications, setNotifications] = useState(null);
-
+  
+  const deleteNotification= async(id) => {
+      const respone =await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
+      {
+        "sender_id" : id 
+      },
+      {headers:{
+        Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+      }}  
+      );
+      getNotifications();
+    
+  } 
 
   const getNotifications = async ()=>{
     console.log('ahlan')
@@ -52,25 +65,25 @@ export default function NotificationsScreen({ navigation }) {
   } 
 
   const sendResponse = async(id, rate) =>{  
+    console.log(id, rate)
+    const response = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
+        {
+          "body": `Someone accepted your offer of  ${rate} for`, //add the amount as well !!!!
+          "receiver_id": id
+        },
+        {headers:{
+            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+          }} 
+        );  
     
-    // const response = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
-    //     {
-    //       "body": `Someone accepted your offer of  ${rate}`,
-    //       "receiver_id": id
-    //     },
-    //     {headers:{
-    //         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
-    //       }} 
-    //     );  
-    
-    // const resp = await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
-    //     {
-    //       "sender_id": id
-    //     },
-    //     {headers:{
-    //         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
-    //       }} 
-    //     );
+    const resp = await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
+        {
+          "sender_id": id
+        },
+        {headers:{
+            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+          }} 
+        );
     navigation.navigate('Amount');
   }
 
@@ -85,13 +98,18 @@ export default function NotificationsScreen({ navigation }) {
    );
 
 
-  if (!notifications) {
+   if(!notifications){
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size='large' />
-      </View>
-    );
-  }
+           <View
+          style = {{
+            flex:1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <ActivityIndicator size='large' color={colors.primary_light}/>
+          </View>
+        ) ;
+}
 
   return (
     <View style={{ flex: 1, paddingVertical: 10 }}>
@@ -131,6 +149,14 @@ export default function NotificationsScreen({ navigation }) {
                     }} 
                     >
                     <Icon name='checkcircle' color ={colors.primary} style={{ marginLeft: 14 }} size={25} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                         // Send notification of confirmation to business, delete notification from from db then direct to amount page
+                       deleteNotification(item.sender_id);
+                    }} 
+                    >
+                    <Icon name='delete' color ={colors.primary} style={{ marginLeft: 14 }} size={25} />
                     </TouchableOpacity>
                 </View>
           </View>

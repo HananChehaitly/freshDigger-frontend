@@ -41,7 +41,7 @@ export default function ProfileScreen({route,  navigation }) {
       // First save body to db
       const res = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
         {
-            "body": amount,
+            "body": `Someone pinged you for: ${amount}`,
             "receiver_id": userId
         },
         {headers:{
@@ -130,8 +130,7 @@ if(!userData){
     
             <View style={{marginHorizontal:70}}>
                 <MyButton  text ='Ping for Offer' onPressFunction={()=>{setRnmodaVisible(true)}}/>      
-            </View>  
-      
+            </View>       
 </View>
 }
         <RNModal

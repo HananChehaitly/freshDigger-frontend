@@ -19,6 +19,7 @@ import RNModal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../constants/palette';
 import MyButton from '../components/ButtonCustom';
+import Delete from 'react-native-vector-icons/AntDesign';
 
 export default function NotificationsBus({ navigation }){
     StatusBar.setBarStyle('dark-content');
@@ -29,16 +30,26 @@ export default function NotificationsBus({ navigation }){
     });
 
   const [notifications, setNotifications] = useState(null);
-  const [expoPushToken, setExpoPushToken] = useState('');
+  const [expoPushToken, setExpoPushToken] = useState(null);
   const [notification, setNotification] = useState(false);
   const [rnmodaVisible, setRnmodaVisible] = useState(false);
   const [rate, setRate] = useState(null);
   const [id, setId] = useState(null);
-  const[isActive] =useState(true);
-
+  const[isActive, setIsActive] =useState(true);
   
+  const deleteNotification= async(id) => {
+    const respone =await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
+    {
+      "sender_id" : id 
+    },
+    {headers:{
+      Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+    }}  
+    );
+    getNotifications();
+  } 
   const getNotifications = async () => {
-    console.log('ahlan')
+
     const response = await  axios.get(`${BASE_API_URL}/api/get-notifications`, 
       {headers:{
         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
@@ -52,14 +63,31 @@ export default function NotificationsBus({ navigation }){
   const sendResponse = async() =>{  
     setRnmodaVisible(false);
     const response = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
-    {
-      "body": rate,
-      "receiver_id": id
-    },
-    {headers:{
-        Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
-      }} 
-    );   
+        {
+          "body": rate,
+          "receiver_id": id
+        },
+        {headers:{
+            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+          }} 
+        ); 
+    //First get token of receiver 
+    const res = await  axios.post(`${BASE_API_URL}/api/get-token`, 
+        {
+          "id": id
+        },
+        {headers:{
+            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+          }} 
+        ); 
+    
+    setExpoPushToken(res.data.expoToken)
+    
+    //console.log(res.data.expoToken)
+    
+    sendPushNotification(expoPushToken,rate);
+    deleteNotification(id)  ;
+    getNotifications();
   }
 
   useFocusEffect(
@@ -73,13 +101,18 @@ export default function NotificationsBus({ navigation }){
    );
   
 
-  if (!notifications) {
+   if(!notifications){
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size='large' />
-      </View>
-    );
-  }
+           <View
+          style = {{
+            flex:1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <ActivityIndicator size='large' color={colors.primary_light}/>
+          </View>
+        ) ;
+    }
 
 
   return (
@@ -100,10 +133,7 @@ export default function NotificationsBus({ navigation }){
                 }}>
             
                 <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                    <Text
-                    s3tyle={{ fontSize: 16 }}
-                    >Someone pinged you for:</Text>
-                    <Text
+                   <Text
                     s3tyle={{ fontSize: 10 }}
                     >{item.body} $</Text>
                 </View>
@@ -115,6 +145,13 @@ export default function NotificationsBus({ navigation }){
                     }} 
                     >
                     <Icon name='reply' style={{ marginLeft: 14 }} size={20} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                    onPress={() => {
+                       deleteNotification(item.sender_id);
+                    }} 
+                    >
+                    <Delete name='delete' style={{ marginLeft: 14 }} size={20} />
                     </TouchableOpacity>
                 </View>
 
@@ -145,12 +182,12 @@ export default function NotificationsBus({ navigation }){
   );
 }
 
-async function sendPushNotification(expoPushToken) {
+async function sendPushNotification(expoPushToken,rate) {
   const message = {
     to: expoPushToken,
     sound: 'default',
-    title: 'Original Title',
-    body: 'And here is the body!',
+    title: 'Rate',
+    body: `1 $ = ${rate} LBP`,
     data: { someData: 'goes here' },
   };
 
@@ -163,28 +200,6 @@ async function sendPushNotification(expoPushToken) {
     },
     body: JSON.stringify(message),
   });
-}
-
-async function registerForPushNotificationsAsync() {
-  let token;
- 
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
-
-  return token;
 }
 
 const styles = StyleSheet.create({
