@@ -8,6 +8,7 @@ import axios from 'axios';
 import { colors } from '../constants/palette';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNModal from 'react-native-modal';
+import *  as Notifications from 'expo-notifications';
 
 export default function ProfileScreen({route,  navigation }) {
   const [userId, setUsedId]  = useState(route.params["userId"]); 
@@ -17,6 +18,13 @@ export default function ProfileScreen({route,  navigation }) {
   const [amount, setAmount] = useState(null);
   const [rnmodaVisible, setRnmodaVisible] = useState(false);
 
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });  
   const getProfile = async () => { 
         const res = await  axios.post(`${BASE_API_URL}/api/get-profile`, 
         {
@@ -28,10 +36,7 @@ export default function ProfileScreen({route,  navigation }) {
         ); 
         
         setUserData(res.data)
-        setToken(userData.expoToken)
-        
-        console.log(res.data)
-        console.log(res.data.expoToken)
+  
     }
 
   const sendPushNotification= async() => {
@@ -48,7 +53,17 @@ export default function ProfileScreen({route,  navigation }) {
       'Authorization' : `Bearer  ${await AsyncStorage.getItem('@storage_Key')}` 
         }}
         );
-      
+
+        const response = await  axios.post(`${BASE_API_URL}/api/get-token`, 
+        {
+          "id": userId
+        },
+        {headers:{
+            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+        }} 
+        ); 
+        setToken(response.data.expoToken)
+        
         const message = {
           to: token,
           sound: 'default',
@@ -66,7 +81,7 @@ export default function ProfileScreen({route,  navigation }) {
           },
           body: JSON.stringify(message),
         });
-      }
+  }
 
   useEffect(()=> {
         getProfile();

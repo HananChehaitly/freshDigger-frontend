@@ -20,6 +20,7 @@ import Delete from 'react-native-vector-icons/AntDesign';
 import BusNotifications from './src/screens/businessNotifications';
 import edit from './src/screens/edit';
 
+console.disableYellowBox = true;
 const HomeStack = createNativeStackNavigator();
 
 function HomeStackScreen() {

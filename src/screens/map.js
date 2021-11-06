@@ -41,8 +41,7 @@ export default function App({navigation}){
     );
       setPin( await response);  
   } 
-
-catch(e){
+catch(e){sawq
   console.log(e);
 }
 }

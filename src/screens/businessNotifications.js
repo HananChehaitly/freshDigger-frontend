@@ -28,6 +28,13 @@ export default function NotificationsBus({ navigation }){
       title: 'Notifications',
       headerLeft: () => null,
     });
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      }),
+    });  
 
   const [notifications, setNotifications] = useState(null);
   const [expoPushToken, setExpoPushToken] = useState(null);
@@ -61,33 +68,33 @@ export default function NotificationsBus({ navigation }){
 
   
   const sendResponse = async() =>{  
-    setRnmodaVisible(false);
-    const response = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
-        {
-          "body": rate,
-          "receiver_id": id
-        },
-        {headers:{
-            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
-          }} 
-        ); 
-    //First get token of receiver 
-    const res = await  axios.post(`${BASE_API_URL}/api/get-token`, 
-        {
-          "id": id
-        },
-        {headers:{
-            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
-          }} 
-        ); 
-    
-    setExpoPushToken(res.data.expoToken)
-    
-    //console.log(res.data.expoToken)
-    
-    sendPushNotification(expoPushToken,rate);
-    deleteNotification(id)  ;
-    getNotifications();
+        setRnmodaVisible(false);
+        const response = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
+            {
+              "body": rate,
+              "receiver_id": id
+            },
+            {headers:{
+                Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+              }} 
+            ); 
+        //First get token of receiver 
+        const res = await  axios.post(`${BASE_API_URL}/api/get-token`, 
+            {
+              "id": id
+            },
+            {headers:{
+                Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+            }} 
+            ); 
+        
+        setExpoPushToken(res.data.expoToken)
+        
+        //console.log(res.data.expoToken)
+        
+        sendPushNotification(expoPushToken,rate);
+        deleteNotification(id)  ;
+        getNotifications();
   }
 
   useFocusEffect(
@@ -135,7 +142,7 @@ export default function NotificationsBus({ navigation }){
                 <View style={{ flex: 1, paddingHorizontal: 10 }}>
                    <Text
                     s3tyle={{ fontSize: 10 }}
-                    >{item.body} $</Text>
+                    >{item.body}</Text>
                 </View>
                 <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity

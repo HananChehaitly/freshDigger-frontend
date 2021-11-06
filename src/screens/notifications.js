@@ -17,10 +17,11 @@ import { Constants } from 'expo-constants';
 import *  as Notifications from 'expo-notifications';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
-      shouldPlaySound: false,
+      shouldPlaySound: true,
       shouldSetBadge: false,
     }),
   });  
@@ -68,7 +69,7 @@ export default function NotificationsScreen({ navigation }) {
     console.log(id, rate)
     const response = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
         {
-          "body": `Someone accepted your offer of  ${rate} for`, //add the amount as well !!!!
+          "body": `Someone accepted your offer of ${rate} `, //add the amount as well !!!!
           "receiver_id": id
         },
         {headers:{
@@ -76,6 +77,18 @@ export default function NotificationsScreen({ navigation }) {
           }} 
         );  
     
+        const res = await  axios.post(`${BASE_API_URL}/api/get-token`, 
+        {
+          "id": id
+        },
+        {headers:{
+            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+        }} 
+        ); 
+
+       setExpoPushToken(res.data.expoToken);
+
+       sendPushNotification(expoPushToken, rate);
     const resp = await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
         {
           "sender_id": id
@@ -84,7 +97,9 @@ export default function NotificationsScreen({ navigation }) {
             Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
           }} 
         );
-    navigation.navigate('Amount');
+        
+        getNotifications();
+        navigation.navigate('Amount', { userId: id});
   }
 
   useFocusEffect(
@@ -166,26 +181,24 @@ export default function NotificationsScreen({ navigation }) {
     </View>
   );
 }
+async function sendPushNotification(expoPushToken, rate) {
+  const message = {
+    to: expoPushToken,
+    sound: 'default',
+    title: 'New Notification',
+    body: `Someone accepted your offer of  ${rate} `,
+    data: { someData: 'goes here' },
+  };
+
+  await fetch('https://exp.host/--/api/v2/push/send', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Accept-encoding': 'gzip, deflate',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(message),
+  });
+}
 
 
-async function registerForPushNotificationsAsync() {
-    let token;
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Notifications.getPermissionsAsync();
-      let finalStatus = existingStatus;
-      if (existingStatus !== 'granted') {
-        const { status } = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
-        return;
-      }
-      token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
-    } else {
-      alert('Must use physical device for Push Notifications');
-    }
-  
-    return token;
-  }
