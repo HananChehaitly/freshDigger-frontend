@@ -14,11 +14,11 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { colors } from '../constants/palette';
 import { Constants } from 'expo-constants';
-import *  as Notifications from 'expo-notifications';
+import *  as Offers from 'expo-notifications';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-Notifications.setNotificationHandler({
+Offers.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
       shouldPlaySound: true,
@@ -26,7 +26,7 @@ Notifications.setNotificationHandler({
     }),
   });  
 
-export default function NotificationsScreen({ navigation }) {
+export default function OffersScreen({ navigation }) {
 
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
@@ -35,11 +35,11 @@ export default function NotificationsScreen({ navigation }) {
   StatusBar.setBarStyle('dark-content');
 
   navigation.setOptions({
-    title: 'Notifications',
+    title: 'Offers',
     headerLeft: () => null,
   });
 
-  const [notifications, setNotifications] = useState(null);
+  const [notifications, setOffers] = useState(null);
   
   const deleteNotification= async(id) => {
       const respone =await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
@@ -50,11 +50,11 @@ export default function NotificationsScreen({ navigation }) {
         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
       }}  
       );
-      getNotifications();
+      getOffers();
     
   } 
 
-  const getNotifications = async ()=>{
+  const getOffers = async ()=>{
     console.log('ahlan')
     const response = await  axios.get(`${BASE_API_URL}/api/get-Sellernotifications`, 
       {headers:{
@@ -62,7 +62,7 @@ export default function NotificationsScreen({ navigation }) {
       }}  
     );
     console.log(response.data)
-    setNotifications(response.data)
+    setOffers(response.data)
   } 
 
   const sendResponse = async(id, rate) =>{  
@@ -98,14 +98,14 @@ export default function NotificationsScreen({ navigation }) {
           }} 
         );
         
-        getNotifications();
+        getOffers();
         navigation.navigate('Amount', { userId: id});
   }
 
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-      getNotifications();
+      getOffers();
       return () => {
         isActive = false;
       };
@@ -160,7 +160,7 @@ export default function NotificationsScreen({ navigation }) {
                     <TouchableOpacity
                     onPress={() => {
                          // Send notification of confirmation to business, delete notification from from db then direct to amount page
-                       sendResponse(item.sender_id, item.body);
+                       sendResponse(item.sender_id);
                     }} 
                     >
                     <Icon name='checkcircle' color ={colors.primary} style={{ marginLeft: 14 }} size={25} />

@@ -6,36 +6,54 @@ import { colors } from '../constants/palette';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import loginScreen from './login';
 export default function MainProject({route, navigation}) {
  
   const [amount, setAmount] = useState(0);
   const business_id= route.params["userId"];
   const submit =  async() =>{
-    console.log('hi')
-    console.log(route.params["userId"])
-    const respone = await axios.post(`${BASE_API_URL}/api/make-exchange`, 
-    {
-      "business_id": business_id,
-      "amount": amount
-    },
-    {headers:{
-      'Authorization' : `Bearer ${await AsyncStorage.getItem('@storage_Key')}` 
-    }}
-    ); 
-    
+
+        console.log('hi')
+        console.log(route.params["userId"])
+        const respone = await axios.post(`${BASE_API_URL}/api/make-exchange`, 
+        {
+          "business_id": business_id,
+          "amount": amount
+        },
+        {headers:{
+          'Authorization' : `Bearer ${await AsyncStorage.getItem('@storage_Key')}` 
+        }}
+        ); 
+        
+  }
+
+const login = () =>
+  {console.log('hi');
+    navigation.navigate('Login');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+        });
+      
   }
 
 
 return (
  
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View>
   <Card>
+  <View style={{marginLeft:270}}>
+
+    <Button title="logout" color={colors.primary} onPress={()=>login()}>Logout</Button>
+  
+  </View>
   <Card.Title title="Confirm Amount" subtitle="Private" left={(props) => <Icon {...props} name="search-dollar" color={colors.primary}/>} />
   <Card.Content>
     <Title>Monitoring Requirements</Title>
     <Paragraph>We are commited to increasing transparency in the Exchange market. Please help us make sure our profiles do not buy above their approved margins.</Paragraph>
   </Card.Content>
-  <View style={[styles.searchBox,{marginTop:185}]}>       
+  <View style={[styles.searchBox,{marginTop:220}]}>       
        <TextInput
           placeholder="Confirm amount you are about to sell in $"
           placeholderTextColor="#808080"
@@ -45,14 +63,17 @@ return (
        />
   </View> 
   <Card.Actions style={{marginTop:40}}>
-    <View style={{marginHorizontal:120}}>
-      <TouchableOpacity onPress={()=>submit()}>
-       <MyButton text="Submit" />
-      </TouchableOpacity>
-    </View>
+    
   </Card.Actions>
 </Card> 
+<View style={{marginHorizontal:120}}>
+      
+       <MyButton text="Submit" onPressFunction={()=>submit()}/>
+    
+    </View>
+  </View>
 </TouchableWithoutFeedback> 
+
   );
  
 }

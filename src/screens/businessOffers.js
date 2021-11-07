@@ -14,21 +14,21 @@ import {
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Fontisto';
 import { Constants } from 'expo-constants';
-import *  as Notifications from 'expo-notifications';
+import *  as Offers from 'expo-notifications';
 import RNModal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../constants/palette';
 import MyButton from '../components/ButtonCustom';
 import Delete from 'react-native-vector-icons/AntDesign';
 
-export default function NotificationsBus({ navigation }){
+export default function OffersBus({ navigation }){
     StatusBar.setBarStyle('dark-content');
 
     navigation.setOptions({
-      title: 'Notifications',
+      title: 'Offers',
       headerLeft: () => null,
     });
-    Notifications.setNotificationHandler({
+    Offers.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: true,
         shouldPlaySound: true,
@@ -36,7 +36,7 @@ export default function NotificationsBus({ navigation }){
       }),
     });  
 
-  const [notifications, setNotifications] = useState(null);
+  const [notifications, setOffers] = useState(null);
   const [expoPushToken, setExpoPushToken] = useState(null);
   const [notification, setNotification] = useState(false);
   const [rnmodaVisible, setRnmodaVisible] = useState(false);
@@ -44,18 +44,19 @@ export default function NotificationsBus({ navigation }){
   const [id, setId] = useState(null);
   const[isActive, setIsActive] =useState(true);
   
-  const deleteNotification= async(id) => {
+  const deleteNotification= async(id, body) => {
     const respone =await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
     {
       "sender_id" : id 
+
     },
     {headers:{
       Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
     }}  
     );
-    getNotifications();
+    getOffers();
   } 
-  const getNotifications = async () => {
+  const getOffers = async () => {
 
     const response = await  axios.get(`${BASE_API_URL}/api/get-notifications`, 
       {headers:{
@@ -63,7 +64,7 @@ export default function NotificationsBus({ navigation }){
       }}  
     );
     console.log(response.data) 
-    setNotifications(response.data)
+    setOffers(response.data)
   }
 
   
@@ -94,13 +95,13 @@ export default function NotificationsBus({ navigation }){
         
         sendPushNotification(expoPushToken,rate);
         deleteNotification(id)  ;
-        getNotifications();
+        getOffers();
   }
 
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-      getNotifications();
+      getOffers();
       return () => {
         isActive = false;
       };
@@ -133,7 +134,7 @@ export default function NotificationsBus({ navigation }){
                     marginRight: 40,
                     paddingHorizontal: 10,
                     paddingVertical: 4,
-                    borderRadius: 10,
+                    borderRadius: 10, 
                     flexDirection: 'row',
                     alignItems: 'center',
                     height: 60,

@@ -9,7 +9,7 @@ import signupScreen from './src/screens/register'
 import HomeScreen from './src/screens/map'
 import AmountScreen  from './src/screens/amount';
 import ProfileScreen from './src/screens/profile';
-import NotificationsScreen from './src/screens/notifications';
+import OffersScreen from './src/screens/offers';
 import RateScreen from './src/screens/rate';
 import { colors } from './src/constants/palette';
 import Design from 'react-native-vector-icons/AntDesign';
@@ -17,8 +17,9 @@ import Dollar from 'react-native-vector-icons/FontAwesome';
 import RegisterBusiness from './src/screens/register_business';
 import RemoveAccounts from './src/screens/RemoveAccounts';
 import Delete from 'react-native-vector-icons/AntDesign';
-import BusNotifications from './src/screens/businessNotifications';
+import BusOffers from './src/screens/businessOffers';
 import edit from './src/screens/edit';
+
 
 console.disableYellowBox = true;
 const HomeStack = createNativeStackNavigator();
@@ -33,14 +34,14 @@ function HomeStackScreen() {
   );
 }
 
-const NotificationsStack = createNativeStackNavigator();
+const OffersStack = createNativeStackNavigator();
 
-function NotificationsStackScreen() {
+function OffersStackScreen() {
   return (
-    <NotificationsStack.Navigator screenOptions={{ headerShown: false }}>
-      <NotificationsStack.Screen name="Notifications" component={NotificationsScreen} />
-      <NotificationsStack.Screen name="Amount" component={AmountScreen} />
-    </NotificationsStack.Navigator>
+    <OffersStack.Navigator screenOptions={{ headerShown: false }}>
+      <OffersStack.Screen name="Offers" component={OffersScreen} />
+      <OffersStack.Screen name="Amount" component={AmountScreen} />
+    </OffersStack.Navigator>
   );
 }
 
@@ -50,8 +51,8 @@ function bottomTabScreen() {
   return (
     <Tab.Navigator  screenOptions={{ headerShown: false,
       tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: '#53e684',
-      tabBarShowLabel: true,
+      tabBarInactiveTintColor: '#aebdb3',
+      tabBarShowLabel: true,  
       tabBarAllowFontScaling: false,
       tabBarKeyboardHidesTabBar: true,
       tabBarShadowColor: '#FFF',
@@ -65,19 +66,19 @@ function bottomTabScreen() {
               <Icon
               name={"home"}
               size = {40}
-              color= {colors.primary}
+              color={focused ? colors.primary : "#798a7f"}              
               />
             ),
           
           }}  />
-        <Tab.Screen name="Notifications" component={NotificationsStackScreen} options={{
+        <Tab.Screen name="Offers" component={OffersStackScreen} options={{
           tabBarIcon:({focused, size})=>
             (
               <Design
               name={"message1"}
               size = {30}
-              color= {colors.primary}
-              />
+              color={focused ? colors.primary : "#798a7f"}              
+          />
             ),
           
           }}/>
@@ -92,7 +93,7 @@ function bottomTabAdminScreen() {
   return (
     <TabAd.Navigator  screenOptions={{ headerShown: false,
       tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: '#53e684',
+      tabBarInactiveTintColor: '#798a7f',
       tabBarShowLabel: true,
       tabBarAllowFontScaling: false,
       tabBarKeyboardHidesTabBar: true,
@@ -107,7 +108,7 @@ function bottomTabAdminScreen() {
               <Icon
               name={"home"}
               size = {40}
-              color= {colors.primary}
+              color={focused ? colors.primary : "#798a7f"}              
               />
             ),
           }}  />
@@ -117,7 +118,7 @@ function bottomTabAdminScreen() {
               <Delete
               name={"deleteuser"}
               size = {30}
-              color= {colors.primary}
+              color={focused ? colors.primary : "#798a7f"}              
               />
             ), 
           }}  />
@@ -131,7 +132,7 @@ function bottomTabBusScreen() {
   return (
     <TabBus.Navigator  screenOptions={{ headerShown: false,
       tabBarActiveTintColor: colors.primary,
-      tabBarInactiveTintColor: '#53e684',
+      tabBarInactiveTintColor: '#798a7f',
       tabBarShowLabel: true,
       tabBarAllowFontScaling: false,
       tabBarKeyboardHidesTabBar: true,
@@ -140,13 +141,13 @@ function bottomTabBusScreen() {
         fontWeight: "bold",
         fontSize: 10,
       },}}>
-        <TabBus.Screen name="Home" component={BusNotifications} options={{
+        <TabBus.Screen name="Home" component={BusOffers} options={{
           tabBarIcon:({focused, size})=>
             (
               <Icon
               name={"home"}
               size = {40}
-              color= {colors.primary}
+              color={focused ? colors.primary : "#798a7f"}              
               />
             ),
           }}  />
@@ -156,7 +157,7 @@ function bottomTabBusScreen() {
               <Design
               name={"edit"}
               size = {30}
-              color= {colors.primary}
+              color={focused ? colors.primary : "#798a7f"}              
               />
             ), 
           }}  />

@@ -107,10 +107,10 @@ if(!userData){
         <View style={styles.userInfoSection}>
             <View  style={{flexDirection: 'row', marginTop: 10, justifyContent:"space-Between"}}>
                 <Image
-                  style={{width:140, height:140, borderRadius:100}}
+                  style={{width:100, height:100, borderRadius:90}}
                   source ={{uri: `${BASE_API_URL}${userData.picture_url}`}}
                 />
-            <View style={{marginLeft: 20}}>
+            <View style={{marginLeft: 12}}>
                 <Title style={ styles.title }>{userData.name}</Title>
                 <View>
                     <Caption style={styles.caption}>{userData.bio}</Caption>
@@ -161,7 +161,7 @@ if(!userData){
               />
               </View> 
               <View style={{marginTop:40, marginHorizontal:80}}>
-                <MyButton style={{marginHorizontal:40}} text="send" onPressFunction = {() =>  sendPushNotification()}/>
+                <MyButton style={{marginHorizontal:40}} text="Send" onPressFunction = {() =>  sendPushNotification()}/>
               </View>
             </View> 
         </RNModal>
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
         
     },
     title: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
         marginTop:15, 
         marginBottom: 5,
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
        // backgroundColor: '#abbab0' ,
         },
     buttonText:{
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '500',
     color: colors.black,        
     }

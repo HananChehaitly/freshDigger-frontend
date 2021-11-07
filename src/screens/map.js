@@ -122,10 +122,12 @@ catch(e){sawq
                    > 
                   <Callout onPress={() => {checkProfile(item.id,{time}); }}
                     style={styles.callout}>
-                      <Text style={styles.title}>{item.name}</Text> 
-                      <View style={{marginBottom: 2, marginLeft:2}}>
-                      <Pin name="caretright" color={colors.primary_light} size={20}/>
-                      </View>        
+                      <View style={{flexDirection:'row', alignItems: "center"}}>
+                          <Text style={styles.title}>{item.name}</Text>
+                          <Pin name="caretright" color={colors.primary_light} size={20}/>
+                      </View> 
+                      <Text style={{fontSize:12}}>Remaining Allowance: 200$</Text> 
+                            
                   </Callout>
                 </Marker>
               );
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
   },
  
  callout: {
-  flexDirection:'row',
+  //flexDirection:'row',
   backgroundColor: "white",
   borderRadius: 4,
   alignItems: "center",
@@ -199,7 +201,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 14,
     lineHeight: 18,
-    flex: 1,
+    //flex: 1,
     //fontFamily: 
  },
    searchBox: {
