@@ -125,7 +125,6 @@ export default function OffersScreen({ navigation }) {
           </View>
         ) ;
 }
-
   return (
     <View style={{ flex: 1, paddingVertical: 10 }}>
       {notifications && notifications.map((item)=>{

@@ -173,6 +173,7 @@ export default function OffersBus({ navigation }){
           isVisible={rnmodaVisible}
           animationIn= 'zoomIn'
           animationOut= 'zoomOut'
+          onBackdropPress={() => setRnmodaVisible(false)}
           >
             <View>
               <View style= {[styles.input,{fontSize:18, fontWeight: '700'}]}>

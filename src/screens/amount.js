@@ -11,9 +11,9 @@ export default function MainProject({route, navigation}) {
  
   const [amount, setAmount] = useState(0);
   const business_id= route.params["userId"];
+
   const submit =  async() =>{
 
-        console.log('hi')
         console.log(route.params["userId"])
         const respone = await axios.post(`${BASE_API_URL}/api/make-exchange`, 
         {

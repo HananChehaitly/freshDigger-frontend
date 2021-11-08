@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Dimensions,  ScrollView,TouchableOpacity, Button, ActivityIndicator, Modal, Pressable, TextInput, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { Text, View, StyleSheet, Dimensions,  ScrollView,TouchableOpacity, Button, ActivityIndicator, Pressable, TextInput, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Title } from 'react-native-paper';
@@ -10,19 +10,20 @@ import MyButton from '../components/ButtonCustom';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Pin from 'react-native-vector-icons/AntDesign';
 import MapViewDirections from 'react-native-maps-directions';
-import { render } from 'react-dom';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Filter from 'react-native-vector-icons/MaterialCommunityIcons';
+import RNModal from 'react-native-modal';
 
 export default function App({navigation}){
   const[location, setLocation] = useState(null)
   const[pins,setPin]= useState(null)
-  const [modalVisible, setModalVisible] = useState(false);
   const [token, setToken] =useState( null );
   const[time,setTime] =useState(null);
   const[showroad, setRoad]=useState(false);
   const[coordinates, setCoordinates]=useState(null);
   const [name, setName] = useState(null);
+  const [rnmodaVisible, setRnmodaVisible] = useState(false);
+  const [amount, setAmount] = useState(null);
 
   const getLocationAsync = async () => {
       try{
@@ -34,15 +35,15 @@ export default function App({navigation}){
      
       setLocation( await currentlocation );
 
-    const response = await  axios.get(`${BASE_API_URL}/api/get-businesses`, 
+    const response = await  axios.get(`${BASE_API_URL}/api/remaining-allowances`, 
       {headers:{
         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
       }} 
     );
       setPin( await response);  
   } 
-catch(e){sawq
-  console.log(e);
+    catch(e){
+    console.log(e);
 }
 }
   const search = async() => {
@@ -96,7 +97,21 @@ catch(e){sawq
   })
   setRoad(true)
   }
+  
+  const filter = async() => {
+    
+      const response = await  axios.post(`${BASE_API_URL}/api/filter`, 
+      {
+        "amount": amount
+      },
+      {headers:{
+          Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+        }} 
+      );
+        setPin( await response);
+        setRnmodaVisible(false);
       
+  }
 
   return (  
     <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}}>
@@ -122,15 +137,14 @@ catch(e){sawq
                    > 
                   <Callout onPress={() => {checkProfile(item.id,{time}); }}
                     style={styles.callout}>
-                      <View style={{flexDirection:'row', alignItems: "center"}}>
+                      <View style={{flexDirection:'row', alignItems: "center",marginBottom:10, marginLeft:3}}>
                           <Text style={styles.title}>{item.name}</Text>
-                          <Pin name="caretright" color={colors.primary_light} size={20}/>
+                          <Pin name="caretright" color={colors.primary_light} size={15}/>
                       </View> 
-                      <Text style={{fontSize:12}}>Remaining Allowance: 200$</Text> 
-                            
+                      <Text style={{fontSize:12}}>Buying Allowance: {item.allowance}$</Text>                    
                   </Callout>
-                </Marker>
-              );
+                </Marker>  
+              ); 
             })}
             {showroad && <MapViewDirections     
                           origin={{latitude: location.coords.latitude , longitude: location.coords.longitude}}
@@ -141,12 +155,11 @@ catch(e){sawq
                           onReady= {result=>{
                             setTime(result.duration)
                             console.log(time)
-                          }}
-                      />
+            }}
+            />
             }
-      </MapView>
+    </MapView>
     }
-    
     <View style={styles.searchBox}>
           <TextInput 
           placeholder="Search here"
@@ -169,8 +182,33 @@ catch(e){sawq
     >
     
     <MyButton text="Check Current Rate"  onPressFunction = {() => checkRate()}/>
-      
     </View>
+    <View style={{position: 'absolute', top: 120, right:10}}>
+    <TouchableOpacity onPress={()=>{setRnmodaVisible(true)}}  style={styles.btnClickContain}>
+      <View style={styles.btnContainer}>
+        <Filter name="filter-plus" size={35} color="white"/> 
+      </View> 
+    </TouchableOpacity>
+    </View>
+
+    <RNModal
+          isVisible={rnmodaVisible}
+          animationIn= 'zoomIn'
+          animationOut= 'zoomOut'
+          onBackdropPress={() => setRnmodaVisible(false)}
+          ><View>
+          <View style= {[styles.input,{fontSize:18, fontWeight: '700'}]}>
+          <TextInput
+          placeholder="Enter the amount in $"
+          onChangeText={(amount) => setAmount(amount)}
+          />
+          </View> 
+          <View style={{marginTop:20, marginHorizontal:80}}>
+            <MyButton style={{marginHorizontal:40}} text="Send" onPressFunction = {() =>  filter()}/>
+          </View>
+        </View> 
+    </RNModal>
+
     </View>
     </TouchableWithoutFeedback>
     );
@@ -201,6 +239,7 @@ const styles = StyleSheet.create({
     color: "black",
     fontSize: 14,
     lineHeight: 18,
+    //textDecorationLine: 'underline'
     //flex: 1,
     //fontFamily: 
  },
@@ -218,5 +257,39 @@ const styles = StyleSheet.create({
   shadowOpacity: 0.5,
   shadowRadius: 5,
 },
+input: {
+        position:'absolute', 
+        flexDirection:"row",        
+        bottom:107,
+        backgroundColor: '#fff',
+        width: '90%',
+        alignSelf:'center',
+        borderRadius: 5,
+        padding: 10,
+        shadowColor: '#ccc',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.5,
+        shadowRadius: 5,
+        },
+
+btnClickContain: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'stretch',
+  alignSelf: 'stretch',
+  backgroundColor: colors.primary,
+  borderRadius: 5,
+  padding: 2,
+  marginTop: 5,
+  marginBottom: 5,
+},
+btnContainer: {
+  flex: 1,
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'stretch',
+  alignSelf: 'stretch',
+  //borderRadius: 0, 
+}
 
 });

@@ -24,6 +24,7 @@ export default function loginScreen({navigation}) {
 
 const login= async() => {
   try {
+    
     const res = await  axios.post(`${BASE_API_URL}/api/login`, {
       "email" : email,
       "password":password

@@ -19,7 +19,7 @@ import RemoveAccounts from './src/screens/RemoveAccounts';
 import Delete from 'react-native-vector-icons/AntDesign';
 import BusOffers from './src/screens/businessOffers';
 import edit from './src/screens/edit';
-
+import BusinessHome from './src/screens/businessHome';
 
 console.disableYellowBox = true;
 const HomeStack = createNativeStackNavigator();
@@ -141,11 +141,21 @@ function bottomTabBusScreen() {
         fontWeight: "bold",
         fontSize: 10,
       },}}>
-        <TabBus.Screen name="Home" component={BusOffers} options={{
+        <TabBus.Screen name="Home" component={BusinessHome} options={{
           tabBarIcon:({focused, size})=>
             (
               <Icon
               name={"home"}
+              size = {40}
+              color={focused ? colors.primary : "#798a7f"}              
+              />
+            ),
+          }}  />
+        <TabBus.Screen name="Offers" component={BusOffers} options={{
+          tabBarIcon:({focused, size})=>
+            (
+              <Dollar
+              name={"dollar"}
               size = {40}
               color={focused ? colors.primary : "#798a7f"}              
               />
