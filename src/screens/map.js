@@ -103,13 +103,13 @@ export default function App({navigation}){
       const response = await  axios.post(`${BASE_API_URL}/api/filter`, 
       {
         "amount": amount
-      },
+      }, 
       {headers:{
           Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
         }} 
       );
         setPin( await response);
-        setRnmodaVisible(false);
+        setRnmodaVisible(false); 
       
   }
 

@@ -36,7 +36,6 @@ export default function edit({navigation}) {
       setStr(result.base64);
       setImage(result.uri); 
     }
-
   };
 
   const save = async () => {

@@ -7,8 +7,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Avatar, Card, Title, Paragraph } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import loginScreen from './login';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});  
+
 export default function MainProject({route, navigation}) {
- 
+  
+  const [expoPushToken, setExpoPushToken] = useState('');
   const [amount, setAmount] = useState(0);
   const business_id= route.params["userId"];
 
@@ -24,7 +35,29 @@ export default function MainProject({route, navigation}) {
           'Authorization' : `Bearer ${await AsyncStorage.getItem('@storage_Key')}` 
         }}
         ); 
-        
+        // use allowance api to see if <0 send push notification to buyer.
+        const resp = await  axios.post(`${BASE_API_URL}/api/get-remainingAllowance`, 
+        {
+          "id": business_id
+        }, 
+          {headers:{
+              Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+            }}    
+          ); 
+            console.log(resp.data);
+        if(resp.data[0].allowance < 0){
+            const res = await  axios.post(`${BASE_API_URL}/api/get-token`, 
+            {
+              "id": business_id
+            },
+            {headers:{
+                Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+            }} 
+            ); 
+
+          setExpoPushToken(res.data.expoToken);
+          sendPushNotification(expoPushToken);
+      }
   }
 
 const login = () =>
@@ -75,9 +108,26 @@ return (
 </TouchableWithoutFeedback> 
 
   );
- 
-}
-
+  async function sendPushNotification(expoPushToken, rate) {
+    const message = {
+      to: expoPushToken,
+      sound: 'default',
+      title: 'New Notification',
+      body: `You have exceeded your limit!`,
+      data: { someData: 'goes here' },
+    };
+  
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
+  }
+  }
 
 
 const styles = StyleSheet.create({

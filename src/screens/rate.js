@@ -38,7 +38,7 @@ export default function RateScreen({navigation}){
             'Authorization' : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
         }}  
         );
-         
+          
         setRate(resp.data)
 
         
@@ -54,7 +54,7 @@ export default function RateScreen({navigation}){
         getRate();
     },[]) 
 
-if(!(rate && days)){
+if(!(rate && days)){  
     return (
             <View
               style = {{
@@ -101,8 +101,8 @@ return(
 
             }
         ],
-        legend: ["Daily Average Rate"]
-    }
+        legend: ["Daily Average Rate"] 
+    }  
     }   width={screenWidth}
         height={220}
         chartConfig={chartConfig} 

@@ -19,7 +19,7 @@ import RNModal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../constants/palette';
 import MyButton from '../components/ButtonCustom';
-import Delete from 'react-native-vector-icons/AntDesign';
+import Delete from 'react-native-vector-icons/FontAwesome';
 
 export default function OffersBus({ navigation }){
     StatusBar.setBarStyle('dark-content');
@@ -151,7 +151,7 @@ export default function OffersBus({ navigation }){
                        setId(item.sender_id);
                        setRnmodaVisible(true)
                     }} 
-                    >
+                    >   
                     <Icon name='reply' style={{ marginLeft: 14 }} size={20} />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -159,9 +159,9 @@ export default function OffersBus({ navigation }){
                        deleteNotification(item.sender_id);
                     }} 
                     >
-                    <Delete name='delete' style={{ marginLeft: 14 }} size={20} />
+                     <Delete name='remove' style={{ marginLeft: 14 }} size={20} />
                     </TouchableOpacity>
-                </View>
+                </View>     
 
           </View>
 

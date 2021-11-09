@@ -12,6 +12,7 @@ import {
  } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/AntDesign';
+import Remove from 'react-native-vector-icons/FontAwesome';
 import { colors } from '../constants/palette';
 import { Constants } from 'expo-constants';
 import *  as Offers from 'expo-notifications';
@@ -40,7 +41,7 @@ export default function OffersScreen({ navigation }) {
   });
 
   const [notifications, setOffers] = useState(null);
-  
+  const [pending, setPending] = useState(null)
   const deleteNotification= async(id) => {
       const respone =await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
       {
@@ -61,8 +62,10 @@ export default function OffersScreen({ navigation }) {
         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
       }}  
     );
-    console.log(response.data)
-    setOffers(response.data)
+    console.log(response.data.responded)
+    console.log(response.data.pending)
+    setOffers(response.data.responded)
+    setPending(response.data.pending)
   } 
 
   const sendResponse = async(id, rate) =>{  
@@ -170,13 +173,46 @@ export default function OffersScreen({ navigation }) {
                        deleteNotification(item.sender_id);
                     }} 
                     >
-                    <Icon name='delete' color ={colors.primary} style={{ marginLeft: 14 }} size={25} />
+                    <Remove name='remove' color ={colors.primary} style={{ marginLeft: 14 }} size={25} />
                     </TouchableOpacity>
                 </View>
           </View>
           );
       })}
       
+      {pending && pending.map((item)=>{
+          return( 
+          <View
+                style={{
+                    margin: 4,
+                    backgroundColor: '#fff',
+                    marginRight: 30,
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
+                    borderRadius: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    height: 60,
+                }}>
+                <View>
+                    <Image
+                    style={{ width: 50, height: 50, borderRadius: 100 }}
+                    source={{uri: `${BASE_API_URL}${item.picture_url}`}}
+                    />
+                </View>
+                <View style={{ flex: 1, paddingHorizontal: 10 }}>
+                    <Text
+                    s3tyle={{ fontSize: 16 }}
+                    >{item.name}</Text>
+                    <Text
+                    s3tyle={{ fontSize: 10 }}
+                    > Pending</Text>
+                </View>
+          </View>
+          );
+      })}
+
+
     </View>
   );
 }

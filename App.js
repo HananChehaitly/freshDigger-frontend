@@ -146,7 +146,7 @@ function bottomTabBusScreen() {
             (
               <Icon
               name={"home"}
-              size = {40}
+              size = {30}
               color={focused ? colors.primary : "#798a7f"}              
               />
             ),
@@ -156,12 +156,12 @@ function bottomTabBusScreen() {
             (
               <Dollar
               name={"dollar"}
-              size = {40}
+              size = {30}
               color={focused ? colors.primary : "#798a7f"}              
               />
             ),
           }}  />
-        <TabBus.Screen name="Edit" component={edit} options={{
+         <TabBus.Screen name="Edit" component={edit} options={{
           tabBarIcon:({focused, size})=>
             (
               <Design
