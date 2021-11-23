@@ -1,5 +1,5 @@
 import React , { useState, useEffect } from 'react';
-import {View,  StyleSheet,  Image, SafeAreaView , ActivityIndicator, TouchableOpacity, Button,TextInput} from 'react-native';
+import {View,  StyleSheet,  Image, SafeAreaView , ActivityIndicator, TouchableOpacity, Button,TextInput, Alert} from 'react-native';
 import {Avatar, Title, Caption, Text, TouchableRipple} from 'react-native-paper';
 import MyButton from '../components/ButtonCustom';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -42,33 +42,41 @@ export default function ProfileScreen({route,  navigation }) {
   const sendPushNotification= async() => {
 
       setRnmodaVisible(false);
-      
+        
       // First save body to db
       const res = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
         {
             "body": `Someone pinged you for: ${amount}`,
             "receiver_id": userId
-        },
+        },        
         {headers:{
       'Authorization' : `Bearer  ${await AsyncStorage.getItem('@storage_Key')}` 
         }}
         );
-
-        const response = await  axios.post(`${BASE_API_URL}/api/get-token`, 
-        {
-          "id": userId
-        },
-        {headers:{
-            Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
-        }} 
+        if(res.data === 'Alert'){
+          Alert.alert(
+            'You have already pinged this buyer!'
+         )
+        }
+        else{ 
+          Alert.alert(
+            'They were notified.'  
+          )
+          console.log(res)
+          const response = await  axios.post(`${BASE_API_URL}/api/get-token`, 
+          {
+            "id": userId
+          },
+          {headers:{
+              Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
+          }} 
         ); 
-        setToken(response.data.expoToken)
-        
+        //setToken(response.data.expoToken) 
         const message = {
-          to: token,
+          to: response.data.expoToken,
           sound: 'default',
-          title: 'Original Title',
-          body: `Someone pinged you for ${amount}` ,
+          title: 'New Notification',
+          body: `Someone pinged you for ${amount} $` ,
           data: { someData: 'goes here' },
         };
       
@@ -81,6 +89,7 @@ export default function ProfileScreen({route,  navigation }) {
           },
           body: JSON.stringify(message),
         });
+        }
   }
 
   useEffect(()=> {
@@ -132,7 +141,7 @@ if(!userData){
             </View>
             <View style={styles.row}>
                 <Icon name = "phone"  color={colors.primary} size={20}/>
-                <Text style={{color: colors.primary_light, marginLeft:20}}>+961 71522151</Text>
+                <Text style={{color: colors.primary_light, marginLeft:20}}>{userData.phone_number}</Text>
             </View>
             <View style={styles.row}>
                 <Icon name = "email"  color={colors.primary} size={20}/>
@@ -152,7 +161,7 @@ if(!userData){
           isVisible={rnmodaVisible}
           animationIn= 'zoomIn'
           animationOut= 'zoomOut'
-          onBackdropPress={() => setRnmodaVisible(false)}
+          onBackdropPress={() => setRnmodaVisible(false)}w
           >
             <View>
               <View style= {[styles.input,{fontSize:18, fontWeight: '700'}]}>

@@ -38,6 +38,15 @@ export default function edit({navigation}) {
     }
   };
 
+  const logout = () =>
+  {console.log('hi');
+    navigation.navigate('Login');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+        });
+      
+  }
   const save = async () => {
     try {
       const res = await axios.post(`${BASE_API_URL}/api/add-picture`, {
@@ -109,6 +118,10 @@ export default function edit({navigation}) {
         <TouchableOpacity style={styles.loginButton} onPress={save}>
           <Text style={styles.loginButtonText}>Save Changes</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.loginButton} onPress={save}>
+          <Text style={styles.loginButtonText} onPress={logout}>lougout</Text>
+        </TouchableOpacity>
       
       </LinearGradient>
     </TouchableWithoutFeedback>
@@ -121,11 +134,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 20,
+    height: '100%', 
+    width: '100%'
   },
   welcomeText: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#fff',
+    color: '#fff', 
     alignSelf: 'center',
     marginBottom: 10
   },

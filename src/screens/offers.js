@@ -72,7 +72,7 @@ export default function OffersScreen({ navigation }) {
     console.log(id, rate)
     const response = await  axios.post(`${BASE_API_URL}/api/send-notification`, 
         {
-          "body": `Someone accepted your offer of ${rate} `, //add the amount as well !!!!
+          "body": `Someone accepted your offer of ${rate} `, 
           "receiver_id": id
         },
         {headers:{
@@ -90,17 +90,16 @@ export default function OffersScreen({ navigation }) {
         ); 
 
        setExpoPushToken(res.data.expoToken);
-
        sendPushNotification(expoPushToken, rate);
-    const resp = await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
+    
+       const resp = await  axios.post(`${BASE_API_URL}/api/delete-notification`, 
         {
           "sender_id": id
         },
         {headers:{
             Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
           }} 
-        );
-        
+        );        
         getOffers();
         navigation.navigate('Amount', { userId: id});
   }
@@ -162,7 +161,7 @@ export default function OffersScreen({ navigation }) {
                     <TouchableOpacity
                     onPress={() => {
                          // Send notification of confirmation to business, delete notification from from db then direct to amount page
-                       sendResponse(item.sender_id);
+                       sendResponse(item.sender_id, item.body);
                     }} 
                     >
                     <Icon name='checkcircle' color ={colors.primary} style={{ marginLeft: 14 }} size={25} />

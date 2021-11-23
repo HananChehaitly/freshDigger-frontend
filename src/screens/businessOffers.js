@@ -89,11 +89,11 @@ export default function OffersBus({ navigation }){
             }} 
             ); 
         
-        setExpoPushToken(res.data.expoToken)
+        //setExpoPushToken(res.data.expoToken)
         
         //console.log(res.data.expoToken)
         
-        sendPushNotification(expoPushToken,rate);
+        sendPushNotification(res.data.expoToken,rate);
         deleteNotification(id)  ;
         getOffers();
   }

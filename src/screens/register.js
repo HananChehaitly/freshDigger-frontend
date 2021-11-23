@@ -8,7 +8,7 @@ import {
   StatusBar,
   Keyboard,
   TouchableWithoutFeedback,
-  TouchableOpacity,
+  TouchableOpacity, ScrollView
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../constants/palette';
@@ -87,6 +87,7 @@ const register= async() => {
  }
 
   return (
+    <ScrollView>
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
@@ -129,6 +130,7 @@ const register= async() => {
         </TouchableOpacity>
       </LinearGradient>
     </TouchableWithoutFeedback>
+    </ScrollView>
   );
 }
 

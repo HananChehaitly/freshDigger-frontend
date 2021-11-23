@@ -35,14 +35,14 @@ export default function App({navigation}){
      
       setLocation( await currentlocation );
 
-    const response = await  axios.get(`${BASE_API_URL}/api/remaining-allowances`, 
+    const response = await  axios.get(`${BASE_API_URL}/api/get-buyers`, 
       {headers:{
         Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
       }} 
     );
       setPin( await response);  
   } 
-    catch(e){
+    catch(e){ 
     console.log(e);
 }
 }
@@ -88,7 +88,7 @@ export default function App({navigation}){
     {navigation.navigate('Rate')}
   }
 
-  const GOOGLE_MAPS_APIKEY = 'AIzaSyAa7Ld1wuUthv8BSZZ8rpg00D6s8bXDjaw';
+  const GOOGLE_MAPS_APIKEY = ''; //had to remove it for security.
   
   const viewDirections = (lat, long) =>{
    setCoordinates({
@@ -108,6 +108,7 @@ export default function App({navigation}){
           Authorization : `Bearer ${await AsyncStorage.getItem('@storage_Key')}`
         }} 
       );
+      console.log(response)
         setPin( await response);
         setRnmodaVisible(false); 
       
@@ -154,7 +155,7 @@ export default function App({navigation}){
                           strokeColor={colors.primary_light}
                           onReady= {result=>{
                             setTime(result.duration)
-                            console.log(time)
+                           
             }}
             />
             }
